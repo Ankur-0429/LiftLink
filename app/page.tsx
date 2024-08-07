@@ -56,8 +56,8 @@ export default function Home() {
                 BETA
               </div>
               <span>•</span>
-              <p>Limited to UCSC students</p>
-              <span>•</span>
+              <p className="hidden sm:visible">Limited to UCSC students</p>
+              <span className="hidden sm:visible">•</span>
               <a href="mailto:ankurahir0429@gmail.com" className="text-blue-500 hover:underline">
                 Send Feedback
               </a>
