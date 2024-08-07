@@ -1,8 +1,24 @@
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
-import { FirestoreAdapter } from "@auth/firebase-adapter"
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { db } from "@/lib/db";
 
 export const {
-    handlers: {GET, POST},
-    auth,
-} = NextAuth({...authConfig, adapter: FirestoreAdapter(), session: {strategy: 'jwt'}});
+  handlers: { GET, POST },
+  auth,
+} = NextAuth({
+  ...authConfig,
+  callbacks: {
+    async jwt({token}) {
+        return token;
+    },
+    async session({token, session}) {
+        if (token.sub && session.user) {
+            session.user.id = token.sub;
+        }
+        return session;
+    }
+  },
+  adapter: PrismaAdapter(db),
+  session: { strategy: "jwt" },
+});
