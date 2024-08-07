@@ -6,9 +6,15 @@ export default {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      authorization:
-        'https://accounts.google.com/o/oauth2/auth?response_type=code&hd=ucsc.edu'
     }),
   ],
+  callbacks: {
+    async signIn({ user }) {
+      if (user.email && user.email.endsWith('@ucsc.edu')) {
+        return true;
+      }
+      return false;
+    },
+  },
   secret: process.env.NEXTAUTH_SECRET as string,
 } satisfies NextAuthConfig;
