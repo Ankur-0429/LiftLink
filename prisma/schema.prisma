@@ -48,6 +48,10 @@ model Account {
 model Channel {
   id String @id @default(cuid())
   name String
+  description String
+  departure   DateTime
+  from        Unsupported("geography(Point, 4326)")
+  to          Unsupported("geography(Point, 4326)") 
   ownerId String
   
   owner User @relation("ChannelOwner", fields: [ownerId], references: [id])
