@@ -3,13 +3,16 @@ import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { auth, signOut } from "@/auth";
+import { User, Settings, LogOut } from "lucide-react";
 
 export default async function Navbar() {
   const session = await auth();
@@ -50,13 +53,24 @@ export default async function Navbar() {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
               <form
                 action={async () => {
                   "use server";
                   await signOut();
                 }}>
-                <Button className="w-full" variant="secondary" type="submit">
-                  Sign Out
+                <Button className="w-full h-8" variant="secondary" type="submit">
+                  <LogOut className="h-4 w-4 mr-2" /> Sign Out
                 </Button>
               </form>
             </DropdownMenuContent>
