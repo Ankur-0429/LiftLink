@@ -62,7 +62,7 @@ const Channel = ({
             <div className="flex -space-x-3 *:ring *:ring-background">
               {members.map((e) => {
                 return (
-                  <Avatar>
+                  <Avatar key={e.image}>
                     <AvatarImage src={e.image} alt={e.name} />
                     <AvatarFallback>
                       {e.name?.charAt(0).toUpperCase()}
