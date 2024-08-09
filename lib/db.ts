@@ -1,23 +1,9 @@
+import { Channel } from "@/app/api/channel/route";
 import { PrismaClient } from "@prisma/client";
-import { channel } from "diagnostics_channel";
 
 declare global {
   var prisma: PrismaClient | undefined;
 }
-
-type MyPoint = {
-  latitude: number;
-  longitude: number;
-};
-
-export type Channel = {
-  name: string;
-  description: string;
-  departure: Date;
-  from: MyPoint;
-  to: MyPoint;
-  ownerId: string;
-};
 
 const prisma = globalThis.prisma || new PrismaClient();
 

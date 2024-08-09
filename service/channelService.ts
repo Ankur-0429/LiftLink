@@ -1,4 +1,5 @@
-import db, { Channel } from "@/lib/db";
+import db from "@/lib/db";
+import { Channel } from "@/app/api/channel/route";
 
 /**
  * 
