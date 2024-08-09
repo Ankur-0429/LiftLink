@@ -53,13 +53,7 @@ export default function ParentComponent() {
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      <LocationInput
-        control={form.control}
-        name="language"
-        options={languages}
-        placeholder="Select language"
-        label="Language"
-      />
+      <LocationInput />
       <Button type="submit">Submit</Button>
     </form>
   );
