@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react"
-import { Toaster } from "@/components/ui/toaster"
+import { SessionProvider } from "next-auth/react";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +18,12 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SessionProvider>
-          <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <SessionProvider>
+          {children}
           <Toaster />
-      </SessionProvider>
+        </SessionProvider>
+      </body>
     </html>
   );
 }

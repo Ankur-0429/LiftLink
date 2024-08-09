@@ -109,7 +109,7 @@ export default function LocationInput() {
         </div>
       </DrawerTrigger>
       <DrawerContent>
-        <div className="mt-4 border-t">
+        <div className="mt-4 border-t text-md">
           <StatusList
             setOpen={setOpen}
             setSelectedStatus={setSelectedStatus}
