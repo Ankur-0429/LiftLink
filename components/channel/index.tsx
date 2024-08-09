@@ -59,7 +59,7 @@ const Channel = ({
         </div>
         <div className="ml-12">
           <div className="my-3 flex items-center gap-2">
-            <div className="flex -space-x-3 *:ring *:ring-white">
+            <div className="flex -space-x-3 *:ring *:ring-background">
               {members.map((e) => {
                 return (
                   <Avatar>
