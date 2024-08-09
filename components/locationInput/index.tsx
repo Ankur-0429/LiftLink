@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -10,18 +10,18 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { X } from "lucide-react"
+} from "@/components/ui/popover";
+import { MapPin, X } from "lucide-react";
 
 type Status = {
-  value: string
-  label: string
-}
+  value: string;
+  label: string;
+};
 
 const statuses: Status[] = [
   {
@@ -44,44 +44,57 @@ const statuses: Status[] = [
     value: "canceled",
     label: "Canceled",
   },
-]
+];
 
-export default function LocationInput() {
+type LocationInputProps = {
+  onStatusChange: (status: Status | null) => void;
+};
+
+export default function LocationInput({ onStatusChange }: LocationInputProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
     null
   );
 
   const handleClear = (event: React.MouseEvent) => {
-    event.stopPropagation(); 
+    event.stopPropagation();
+    onStatusChange(null);
     setSelectedStatus(null);
   };
 
-    return (
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <div className="relative w-[150px]">
-            <Button variant="outline" className="w-full justify-start">
-              {selectedStatus ? <>{selectedStatus.label}</> : <>+ Set status</>}
-            </Button>
-            {selectedStatus && (
-              <span
-                onClick={handleClear}
-                className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
-              >
-                <X size={20} />
-              </span>
+  const handleStatusSelect = (status: Status | null) => {
+    setSelectedStatus(status);
+    onStatusChange(status);
+    setOpen(false);
+  };
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <div className="relative">
+          <Button variant="outline" className="w-full justify-start" type="button">
+            {selectedStatus ? (
+              <>{selectedStatus.label}</>
+            ) : (
+              <p className="opacity-60 flex gap-x-2 items-center">
+                <MapPin size={15} /> From
+              </p>
             )}
-          </div>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
-          <StatusList
-            setOpen={setOpen}
-            setSelectedStatus={setSelectedStatus}
-          />
-        </PopoverContent>
-      </Popover>
-    );
+          </Button>
+          {selectedStatus && (
+            <span
+              onClick={handleClear}
+              className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700">
+              <X size={20} />
+            </span>
+          )}
+        </div>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0" align="start">
+        <StatusList setOpen={setOpen} setSelectedStatus={handleStatusSelect} />
+      </PopoverContent>
+    </Popover>
+  );
 }
 
 function StatusList({
@@ -106,8 +119,7 @@ function StatusList({
                   statuses.find((priority) => priority.value === value) || null
                 );
                 setOpen(false);
-              }}
-            >
+              }}>
               {status.label}
             </CommandItem>
           ))}
