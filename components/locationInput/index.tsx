@@ -16,7 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { MapPin, X } from "lucide-react";
+import { X } from "lucide-react";
 
 type Status = {
   value: string;
@@ -48,9 +48,15 @@ const statuses: Status[] = [
 
 type LocationInputProps = {
   onStatusChange: (status: Status | null) => void;
+  placeholder: string;
+  icon: React.ReactNode;
 };
 
-export default function LocationInput({ onStatusChange }: LocationInputProps) {
+export default function LocationInput({
+  onStatusChange,
+  placeholder,
+  icon
+}: LocationInputProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
     null
@@ -72,12 +78,19 @@ export default function LocationInput({ onStatusChange }: LocationInputProps) {
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <div className="relative">
-          <Button variant="outline" className="w-full justify-start" type="button">
+          <Button
+            variant="outline"
+            className="w-full justify-start"
+            type="button">
             {selectedStatus ? (
-              <>{selectedStatus.label}</>
+              <p className="opacity-60 flex gap-x-2 items-center">
+                {icon}
+                {selectedStatus.label}
+              </p>
             ) : (
               <p className="opacity-60 flex gap-x-2 items-center">
-                <MapPin size={15} /> From
+                {icon}
+                {placeholder}
               </p>
             )}
           </Button>

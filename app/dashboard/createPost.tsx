@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 const CreatePost = () => {
   const session = useSession();
   return (
-    <div className="bg-background cursor-pointer py-2 px-3 rounded-full flex justify-between items-center">
+    <div className="border-2 border-border cursor-pointer py-2 px-3 rounded-full flex justify-between items-center">
       <div className="flex items-center gap-x-3">
       <Avatar>
         <AvatarImage
