@@ -57,6 +57,9 @@ model Channel {
   owner User @relation("ChannelOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   requests Request[]  @relation("ChannelRequests")
   messages Message[]  @relation("ChannelMessages")
+
+  @@index([from], name: "location_from_idx", type: Gist)
+  @@index([to], name: "location_to_idx", type: Gist)
 }
 
 model Request {
