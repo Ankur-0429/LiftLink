@@ -1,6 +1,6 @@
 import Navbar from "@/components/navbar";
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode

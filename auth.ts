@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 
 export const {
   handlers: { GET, POST },
+  signOut,
   auth,
 } = NextAuth({
   ...authConfig,
