@@ -2,7 +2,6 @@
 
 import * as React from "react"
 
-import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/ui/button"
 import {
   Command,
@@ -49,7 +48,6 @@ const statuses: Status[] = [
 
 export default function LocationInput() {
   const [open, setOpen] = React.useState(false);
-  const isDesktop = useMediaQuery("(min-width: 768px)");
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
     null
   );
