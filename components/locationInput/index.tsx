@@ -13,11 +13,6 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import {
-  Drawer,
-  DrawerContent,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -59,11 +54,11 @@ export default function LocationInput() {
     null
   );
 
-  const handleClear = () => {
+  const handleClear = (event: React.MouseEvent) => {
+    event.stopPropagation(); 
     setSelectedStatus(null);
   };
 
-  if (isDesktop) {
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
@@ -89,35 +84,6 @@ export default function LocationInput() {
         </PopoverContent>
       </Popover>
     );
-  }
-
-  return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        <div className="relative w-[150px]">
-          <Button variant="outline" className="w-full justify-start">
-            {selectedStatus ? <>{selectedStatus.label}</> : <>+ Set status</>}
-          </Button>
-          {selectedStatus && (
-            <span
-              onClick={handleClear}
-              className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hover:text-gray-700"
-            >
-              <X size={20} />
-            </span>
-          )}
-        </div>
-      </DrawerTrigger>
-      <DrawerContent>
-        <div className="mt-4 border-t text-md">
-          <StatusList
-            setOpen={setOpen}
-            setSelectedStatus={setSelectedStatus}
-          />
-        </div>
-      </DrawerContent>
-    </Drawer>
-  );
 }
 
 function StatusList({
