@@ -54,7 +54,7 @@ model Channel {
   to          Unsupported("geography(Point, 4326)") 
   ownerId String
   
-  owner User @relation("ChannelOwner", fields: [ownerId], references: [id])
+  owner User @relation("ChannelOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   requests Request[]  @relation("ChannelRequests")
   messages Message[]  @relation("ChannelMessages")
 }
@@ -64,8 +64,8 @@ model Request {
   userId String
   channelId String
   status RequestStatus @default(PENDING)
-  user User @relation("UserRequests", fields: [userId], references: [id])
-  channel Channel @relation("ChannelRequests", fields: [channelId], references: [id])
+  user User @relation("UserRequests", fields: [userId], references: [id], onDelete: Cascade)
+  channel Channel @relation("ChannelRequests", fields: [channelId], references: [id], onDelete: Cascade)
   @@unique([userId, channelId])
 }
 
@@ -75,8 +75,8 @@ model Message {
   createdAt DateTime @default(now())
   userId String
   channelId String
-  user User @relation("UserMessages", fields: [userId], references: [id])
-  channel Channel @relation("ChannelMessages", fields: [channelId], references: [id])
+  user User @relation("UserMessages", fields: [userId], references: [id], onDelete: Cascade)
+  channel Channel @relation("ChannelMessages", fields: [channelId], references: [id], onDelete: Cascade)
 }
 
 enum RequestStatus {
