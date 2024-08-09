@@ -1,4 +1,4 @@
-import { Channel } from "@/app/api/channel/route";
+import { Channel } from "@/type";
 import { PrismaClient } from "@prisma/client";
 
 declare global {
