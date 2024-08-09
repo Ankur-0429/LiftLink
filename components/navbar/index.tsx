@@ -69,7 +69,7 @@ export default async function Navbar() {
                   "use server";
                   await signOut();
                 }}>
-                <Button className="w-full h-8" variant="secondary" type="submit">
+                <Button className="w-full h-8 flex items-center justify-start pl-2 rounded-sm font-normal bg-transparent hover:background-secondary" variant="secondary" type="submit">
                   <LogOut className="h-4 w-4 mr-2" /> Sign Out
                 </Button>
               </form>
