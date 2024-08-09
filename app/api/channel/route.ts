@@ -1,6 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+import type { NextRequest } from 'next/server'
+import { NextResponse } from "next/server";
 import { createChannel } from "@/service/channelService";
-import { z } from 'zod';
+import { z } from "zod";
 
 export const channelSchema = z.object({
   name: z.string(),
@@ -19,13 +20,9 @@ export const channelSchema = z.object({
 
 export type Channel = z.infer<typeof channelSchema>;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    const parsedData = channelSchema.parse(req.body);
-    if (!parsedData) return res.status(400);
-    await createChannel(parsedData);
-    res.status(201);
-  } else {
-    res.status(405).end();
-  }
+export async function POST(request: NextRequest) {
+  const parsedData = channelSchema.parse(request.body);
+  if (!parsedData) return NextResponse.json({}, {status: 400});
+  await createChannel(parsedData);
+  return NextResponse.json({}, {status: 201});
 }
