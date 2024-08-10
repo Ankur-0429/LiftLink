@@ -4,7 +4,7 @@ import { Channel } from "@/type";
 /**
  * 
  * Create a new channel owned by one user
- * User is approved to send messages
+ * User is a member of this channel
  * because they own this channel.
  * @param channel 
  * @returns 

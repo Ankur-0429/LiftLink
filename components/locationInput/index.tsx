@@ -18,12 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { X } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
-
-type Status = {
-  address: string;
-  latitude: number;
-  longitude: number;
-};
+import { Status } from "@/type";
 
 type LocationInputProps = {
   onStatusChange: (status: Status | null) => void;

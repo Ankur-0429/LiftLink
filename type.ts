@@ -14,4 +14,10 @@ export const channelSchema = z.object({
   ownerId: z.string(),
 });
 
+export type Status = {
+  address: string;
+  latitude: number;
+  longitude: number;
+};
+
 export type Channel = z.infer<typeof channelSchema>;

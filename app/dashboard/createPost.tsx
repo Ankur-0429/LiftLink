@@ -16,7 +16,6 @@ import {
 import { MapPin, Plus, Search } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { Switch } from "@/components/ui/switch";
-import { DateRangePicker } from "@/components/dateRangePicker";
 import LocationInput from "@/components/locationInput";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -30,6 +29,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "@/components/ui/use-toast";
+import { DateTimePicker } from "@/components/ui/datetime-picker";
 
 const FormSchema = z.object({
   numberOfParticipants: z.preprocess(
@@ -103,7 +103,7 @@ const CreatePost = () => {
               placeholder="Where are you going?"
               icon={<Search size={15} />}
             />
-            <DateRangePicker className="mt-5" />
+            <DateTimePicker hourCycle={12} />
             <div className="items-top flex space-x-2 mt-5 ml-4">
               <div className="flex items-center space-x-2">
                 <Switch id="women-only-mode" />
