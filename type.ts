@@ -6,10 +6,12 @@ export const channelSchema = z.object({
   from: z.object({
     latitude: z.number(),
     longitude: z.number(),
+    address: z.string()
   }),
   to: z.object({
     latitude: z.number(),
     longitude: z.number(),
+    address: z.string()
   }),
   ownerId: z.string(),
 });

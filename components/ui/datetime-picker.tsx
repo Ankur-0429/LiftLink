@@ -707,6 +707,7 @@ const DateTimePicker = React.forwardRef<DateTimePickerRef, DateTimePickerProps>(
             onSelect={(d) => handleSelect(d)}
             onMonthChange={handleSelect}
             initialFocus
+            fromDate={new Date()}
             yearRange={yearRange}
             locale={locale}
             {...props}
