@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-
+import debounce from "lodash.debounce";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -17,34 +17,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { X } from "lucide-react";
+import { Skeleton } from "../ui/skeleton";
 
 type Status = {
-  value: string;
-  label: string;
+  address: string;
+  latitude: number;
+  longitude: number;
 };
-
-const statuses: Status[] = [
-  {
-    value: "backlog",
-    label: "Backlog",
-  },
-  {
-    value: "todo",
-    label: "Todo",
-  },
-  {
-    value: "in progress",
-    label: "In Progress",
-  },
-  {
-    value: "done",
-    label: "Done",
-  },
-  {
-    value: "canceled",
-    label: "Canceled",
-  },
-];
 
 type LocationInputProps = {
   onStatusChange: (status: Status | null) => void;
@@ -55,7 +34,7 @@ type LocationInputProps = {
 export default function LocationInput({
   onStatusChange,
   placeholder,
-  icon
+  icon,
 }: LocationInputProps) {
   const [open, setOpen] = React.useState(false);
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
@@ -85,7 +64,7 @@ export default function LocationInput({
             {selectedStatus ? (
               <p className="opacity-60 flex gap-x-2 items-center">
                 {icon}
-                {selectedStatus.label}
+                {selectedStatus.address}
               </p>
             ) : (
               <p className="opacity-60 flex gap-x-2 items-center">
@@ -117,26 +96,91 @@ function StatusList({
   setOpen: (open: boolean) => void;
   setSelectedStatus: (status: Status | null) => void;
 }) {
+  const [value, setValue] = React.useState("");
+  const [statuses, setStatuses] = React.useState([] as Status[]);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleSearchChange = async (query: string) => {
+    if (!query) {
+      setIsLoading(false);
+      return;
+    }
+    const authHeader = new Headers();
+    authHeader.append(
+      "Authorization",
+      process.env.NEXT_PUBLIC_RADAR_API_KEY as string
+    );
+
+    const request = new Request(
+      "https://api.radar.io/v1/geocode/forward?" +
+        new URLSearchParams({ query }).toString(),
+      {
+        headers: authHeader,
+        method: "GET",
+      }
+    );
+
+    try {
+      const response = await fetch(request);
+      const data = await response.json();
+      if (data.addresses) {
+        const newStatuses = data.addresses.map((address: any) => ({
+          latitude: address.latitude,
+          longitude: address.longitude,
+          address: address.formattedAddress,
+        }));
+        setStatuses(newStatuses);
+      }
+    } catch (error) {
+      console.error("Error fetching locations:", error);
+    }
+    setIsLoading(false);
+  };
+
+  const debouncedSearchChange = React.useCallback(
+    debounce(handleSearchChange, 2000),
+    []
+  );
+
+  const handleValueChange = (value: string) => {
+    setValue(value);
+    setIsLoading(true);
+    debouncedSearchChange(value);
+  };
+
+  console.log(statuses);
+
   return (
     <Command>
-      <CommandInput placeholder="Filter status..." />
+      <CommandInput
+        value={value}
+        onValueChange={handleValueChange}
+        placeholder="Filter by location..."
+      />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup>
-          {statuses.map((status) => (
-            <CommandItem
-              key={status.value}
-              value={status.value}
-              onSelect={(value) => {
-                setSelectedStatus(
-                  statuses.find((priority) => priority.value === value) || null
-                );
-                setOpen(false);
-              }}>
-              {status.label}
-            </CommandItem>
-          ))}
-        </CommandGroup>
+        {isLoading ? (
+          <Skeleton className="h-10 w-[250px]" />
+        ) : (
+          <>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup>
+              {statuses.map((status) => (
+                <CommandItem
+                  key={status.address}
+                  value={status.address}
+                  onSelect={(value) => {
+                    setSelectedStatus(
+                      statuses.find((priority) => priority.address === value) ||
+                        null
+                    );
+                    setOpen(false);
+                  }}>
+                  {status.address}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </>
+        )}
       </CommandList>
     </Command>
   );
