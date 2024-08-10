@@ -11,14 +11,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     body['ownerId'] = session?.user?.id;
     body['departure'] = new Date(body['departure']);
-    console.log(body);
     const parsedData = channelSchema.parse(body);
     await createChannel(parsedData);
     return NextResponse.json({}, { status: 201 });
   } catch(error) {
-    console.error(error)
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors }, { status: 400 });
+      return NextResponse.json({ error: "Invalid data format" }, { status: 400 });
     }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

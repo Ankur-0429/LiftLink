@@ -126,9 +126,7 @@ function StatusList({
         }));
         setStatuses(newStatuses);
       }
-    } catch (error) {
-      console.error("Error fetching locations");
-    }
+    } catch {}
     setIsLoading(false);
   };
 

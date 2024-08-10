@@ -11,18 +11,17 @@ const extendedDB = prisma.$extends({
   model: {
     channel: {
       async create(data: Channel) {
-        console.log(data);
-        console.log('end')
         const fromPoint = `POINT(${data.from.longitude} ${data.from.latitude})`;
         const toPoint = `POINT(${data.to.longitude} ${data.to.latitude})`;
         await prisma.$queryRaw`
         WITH inserted_channel AS (
-            INSERT INTO "Channel" ("description", "departure", "from", "to", "fromAddress", "toAddress", "ownerId") 
+            INSERT INTO "Channel" ("description", "departure", "from", "to", "fromAddress", "toAddress", "womenOnly", "ownerId") 
             VALUES (${data.description}, ${data.departure}, 
               ST_GeomFromText(${fromPoint}, 4326), 
               ST_GeomFromText(${toPoint}, 4326),
               ${data.from.address},
               ${data.to.address}, 
+              ${data.womenOnly},
               ${data.ownerId})
               RETURNING id
           )
