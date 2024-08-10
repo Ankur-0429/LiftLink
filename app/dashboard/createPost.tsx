@@ -83,7 +83,7 @@ const CreatePost = () => {
           <Plus />
         </div>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="w-screen h-screen sm:w-full sm:h-[550px]">
         <DialogHeader>
           <DialogTitle>Create Carpool</DialogTitle>
           <DialogDescription>
