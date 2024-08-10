@@ -1,7 +1,6 @@
 import {z} from "zod"
 
 export const channelSchema = z.object({
-  name: z.string(),
   description: z.string(),
   departure: z.date(),
   from: z.object({
