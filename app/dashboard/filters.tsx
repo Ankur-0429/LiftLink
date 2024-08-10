@@ -20,7 +20,7 @@ export default function ParentComponent() {
           placeholder="Where to Carpool?"
           icon={<MapPin size={15} />}
         />
-        <div className="ml-6 w-[3px] bg-gray-300 h-[20px]" />
+        <div className="ml-[1.4rem] w-[3px] bg-gray-300 h-[20px]" />
         <LocationInput
           onStatusChange={setToStatus}
           placeholder="Where are you going?"
