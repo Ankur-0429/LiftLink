@@ -4,7 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Channel } from "@/type";
 import {
   Dialog,
   DialogContent,
@@ -35,7 +34,7 @@ const CreatePost = () => {
   const [womenOnly, setWomenOnly] = useState(false);
   const [participants, setParticipants] = useState("");
   const [occasion, setOccasion] = useState("");
-
+  const [open, setOpen] = useState(false);
   const isFormComplete: boolean =
     !!fromLocation &&
     !!toLocation &&
@@ -64,22 +63,21 @@ const CreatePost = () => {
         departure: data.dateTime,
         from: data.fromLocation,
         to: data.toLocation,
+        womenOnly,
         description: data.occasion,
       };
 
-      const response = await fetch("/api/channel", {
+      await fetch("/api/channel", {
         method: "POST",
         body: JSON.stringify(channel),
       });
 
-      const d = await response.json();
-      console.log("done");
-      console.log(d);
+      setOpen(false)
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <div className="border-2 border-border cursor-pointer py-2 px-3 rounded-full flex justify-between items-center">
           <div className="flex items-center gap-x-3">
@@ -153,7 +151,7 @@ const CreatePost = () => {
           }}
         />
         <DialogFooter>
-          <Button onClick={submitCarpool} disabled={!isFormComplete}>Save changes</Button>
+          <Button onClick={submitCarpool} disabled={!isFormComplete}>Create Carpool</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

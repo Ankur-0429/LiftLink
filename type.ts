@@ -13,6 +13,7 @@ export const channelSchema = z.object({
     longitude: z.number(),
     address: z.string()
   }),
+  womenOnly: z.boolean(),
   ownerId: z.string(),
 });
 
