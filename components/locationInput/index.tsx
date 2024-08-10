@@ -112,7 +112,7 @@ function StatusList({
     );
 
     const request = new Request(
-      "https://api.radar.io/v1/geocode/forward?" +
+      "https://api.radar.io/v1/search/autocomplete?" +
         new URLSearchParams({ query }).toString(),
       {
         headers: authHeader,
@@ -132,7 +132,7 @@ function StatusList({
         setStatuses(newStatuses);
       }
     } catch (error) {
-      console.error("Error fetching locations:", error);
+      console.error("Error fetching locations");
     }
     setIsLoading(false);
   };
@@ -147,8 +147,6 @@ function StatusList({
     setIsLoading(true);
     debouncedSearchChange(value);
   };
-
-  console.log(statuses);
 
   return (
     <Command>
