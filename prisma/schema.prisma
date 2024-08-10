@@ -9,21 +9,6 @@ generator client {
   previewFeatures = ["postgresqlExtensions"]
 }
 
-model User {
-  id            String           @id @default(cuid())
-  name          String?
-  email         String           @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  ownedChannels Channel[]        @relation("ChannelOwner")
-  channelRequests Request[]      @relation("UserRequests")
-  sentMessages  Message[]        @relation("UserMessages")
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model Account {
   userId            String
   type              String
@@ -45,45 +30,73 @@ model Account {
   @@id([provider, providerAccountId])
 }
 
+model User {
+  id              String    @id @default(cuid())
+  name            String?
+  email           String    @unique
+  emailVerified   DateTime?
+  image           String?
+  accounts        Account[]
+  ownedChannels   Channel[] @relation("ChannelOwner")
+  channelRequests Request[] @relation("UserRequests")
+  sentMessages    Message[] @relation("UserMessages")
+  memberChannels  Channel[] @relation("ChannelMembers")
+
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  ChannelMember ChannelMember[]
+}
+
 model Channel {
-  id String @id @default(cuid())
-  name String
+  id          String                                @id @default(cuid())
   description String
   departure   DateTime
   from        Unsupported("geography(Point, 4326)")
-  to          Unsupported("geography(Point, 4326)") 
-  ownerId String
-  
-  owner User @relation("ChannelOwner", fields: [ownerId], references: [id], onDelete: Cascade)
-  requests Request[]  @relation("ChannelRequests")
-  messages Message[]  @relation("ChannelMessages")
+  to          Unsupported("geography(Point, 4326)")
+  ownerId     String
+  members     User[]                                @relation("ChannelMembers")
+
+  owner         User            @relation("ChannelOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  requests      Request[]       @relation("ChannelRequests")
+  messages      Message[]       @relation("ChannelMessages")
+  ChannelMember ChannelMember[]
 
   @@index([from], name: "location_from_idx", type: Gist)
   @@index([to], name: "location_to_idx", type: Gist)
 }
 
-model Request {
-  id String @id @default(cuid())
-  userId String
+model ChannelMember {
+  userId    String
   channelId String
-  status RequestStatus @default(PENDING)
-  user User @relation("UserRequests", fields: [userId], references: [id], onDelete: Cascade)
-  channel Channel @relation("ChannelRequests", fields: [channelId], references: [id], onDelete: Cascade)
+
+  user    User    @relation(fields: [userId], references: [id])
+  channel Channel @relation(fields: [channelId], references: [id])
+
+  @@id([userId, channelId])
+}
+
+model Request {
+  id        String        @id @default(cuid())
+  userId    String
+  channelId String
+  status    RequestStatus @default(PENDING)
+  user      User          @relation("UserRequests", fields: [userId], references: [id], onDelete: Cascade)
+  channel   Channel       @relation("ChannelRequests", fields: [channelId], references: [id], onDelete: Cascade)
+
   @@unique([userId, channelId])
 }
 
 model Message {
-  id String @id @default(cuid())
-  content String
+  id        String   @id @default(cuid())
+  content   String
   createdAt DateTime @default(now())
-  userId String
+  userId    String
   channelId String
-  user User @relation("UserMessages", fields: [userId], references: [id], onDelete: Cascade)
-  channel Channel @relation("ChannelMessages", fields: [channelId], references: [id], onDelete: Cascade)
+  user      User     @relation("UserMessages", fields: [userId], references: [id], onDelete: Cascade)
+  channel   Channel  @relation("ChannelMessages", fields: [channelId], references: [id], onDelete: Cascade)
 }
 
 enum RequestStatus {
   PENDING
-  APPROVED
   REJECTED
 }
