@@ -115,9 +115,7 @@ const Channel = ({
           </div>
           <p className="mb-3">{description}</p>
           {status === "PENDING" && (
-            <Button variant="secondary" className="w-32" onClick={() => {
-              setStatus("IDLE");
-            }}>
+            <Button variant="secondary" className="w-32 cursor-default">
               Requested
             </Button>
           )}
