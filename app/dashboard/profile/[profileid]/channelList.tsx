@@ -52,7 +52,7 @@ const UserChannelsList = ({ userId }: { userId: string }) => {
         next={handleLoadMore}
         isLoading={loading}
         threshold={1}>
-        {hasMore && <Loader2 className="my-4 h-8 w-8 animate-spin" />}
+        {hasMore && <Loader2 className="my-4 h-8 w-8 animate-spin bg-transparent mx-auto" />}
       </InfiniteScroll>
     </div>
   );
