@@ -23,7 +23,6 @@ export const requestChannel = async (channelid: number, userid: string) => {
       if (isMember) {
         return null;
       }
-  
       const existingRequest = await db.request.findUnique({
         where: {
           userId_channelId: {
@@ -47,6 +46,7 @@ export const requestChannel = async (channelid: number, userid: string) => {
   
       return newRequest;
     } catch (error) {
+      console.error(error);
       throw new Error("Error during request service");
     }
   };

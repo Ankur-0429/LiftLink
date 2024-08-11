@@ -124,7 +124,7 @@ const Channel = ({
           {status === "IDLE" && (
             <Button onClick={() => {
               const makeRequest = async() => {
-                await fetch("/api/channel/" + id + "/request", {
+                await fetch("/api/channel/" + id.toString() + "/request", {
                   method: "POST"
                 })
               };

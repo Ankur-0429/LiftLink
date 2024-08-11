@@ -32,4 +32,6 @@ const Dashboard = () => {
   );
 };
 
+// http://localhost:3000/dashboard/profile/clzous37j0003yfw3cuil8rk2
+
 export default Dashboard;
