@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 const memberData = () => {
   const data = [];
   for (let i = 0; i < 4; i++) {
-    data.push({ name: "Charles", image: `https://i.pravatar.cc/${i + 70}` });
+    data.push({ name: "Charles", image: `https://i.pravatar.cc/${i + 70}`, id: `${i}` });
   }
   return data;
 };
@@ -20,7 +20,7 @@ const Dashboard = () => {
       </div>
       <Separator className="mt-5" />
       <Channel
-        owner={{ name: "Ankur Ahir", image: "false" }}
+        owner={{ name: "Ankur Ahir", image: "false", id: "5" }}
         limit={5}
         members={memberData()}
         createdAt={new Date("2024-08-08T07:25:32.653Z")}
