@@ -10,7 +10,7 @@ import db from "@/lib/db";
  * @param limit The maximum number of channels to return
  * @returns An object containing the channels and the next cursor
  */
-const findChannelsByOwner = async (
+export const findChannelsByOwner = async (
   userId: string,
   currentUserId: string,
   cursor?: number,
@@ -29,20 +29,29 @@ const findChannelsByOwner = async (
     },
     take: limit + 1,
     select: {
-      fromAddress: false,
-      toAddress: false,
-      departure: false,
-      members: true,
       description: true,
-      limit: true,
-    },
-    include: {
-      members: true,
-      requests: {
-        where: {
-          userId: currentUserId,
+      participants: true,
+      createdAt: true,
+      id: true,
+      members: {
+        select: {
+          name: true,
+          image: true,
+          id: true,
         }
       },
+      owner: {
+        select: {
+          name: true,
+          image: true,
+          id: true,
+        }
+      },
+      requests: {
+        where: {
+          userId: currentUserId
+        }
+      }
     },
     orderBy: {
       departure: "asc",

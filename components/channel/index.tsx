@@ -10,9 +10,10 @@ import { useState } from "react";
 type UserType = {
   name?: string;
   image?: string;
+  id: string;
 };
 
-interface ChannelInterface {
+export interface ChannelInterface {
   owner: UserType;
   members: UserType[];
   limit: number;
