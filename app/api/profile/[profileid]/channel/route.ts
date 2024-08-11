@@ -22,7 +22,6 @@ export async function GET(request: NextRequest, params: {profileid: string}) {
       return {
         key: e.id,
         description: e.description,
-        departure: e.departure,
         createdAt: e.createdAt,
         ifRequestedAlready: true,
         limit: e.participants,
