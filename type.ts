@@ -14,6 +14,7 @@ export const channelSchema = z.object({
     address: z.string()
   }),
   womenOnly: z.boolean(),
+  participants: z.number(),
   ownerId: z.string(),
 });
 

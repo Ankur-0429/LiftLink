@@ -7,21 +7,23 @@ declare global {
 
 const prisma = globalThis.prisma || new PrismaClient();
 
-const extendedDB = prisma.$extends({
+const db = prisma.$extends({
   model: {
     channel: {
       async create(data: Channel) {
+        console.log(data);
         const fromPoint = `POINT(${data.from.longitude} ${data.from.latitude})`;
         const toPoint = `POINT(${data.to.longitude} ${data.to.latitude})`;
         await prisma.$queryRaw`
         WITH inserted_channel AS (
-            INSERT INTO "Channel" ("description", "departure", "from", "to", "fromAddress", "toAddress", "womenOnly", "ownerId") 
+            INSERT INTO "Channel" ("description", "departure", "from", "to", "fromAddress", "toAddress", "womenOnly", "participants", "ownerId") 
             VALUES (${data.description}, ${data.departure}, 
               ST_GeomFromText(${fromPoint}, 4326), 
               ST_GeomFromText(${toPoint}, 4326),
               ${data.from.address},
               ${data.to.address}, 
               ${data.womenOnly},
+              ${data.participants},
               ${data.ownerId})
               RETURNING id
           )
@@ -37,4 +39,4 @@ const extendedDB = prisma.$extends({
 if (process.env.NODE_ENV !== "production") {
   globalThis.prisma = prisma;
 }
-export default extendedDB;
+export default db;

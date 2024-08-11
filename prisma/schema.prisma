@@ -56,6 +56,7 @@ model Channel {
   toAddress   String
   ownerId     String
   womenOnly   Boolean
+  participants       Int
   members     User[]                                @relation("ChannelMembers")
 
   owner    User      @relation("ChannelOwner", fields: [ownerId], references: [id], onDelete: Cascade)

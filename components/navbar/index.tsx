@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,11 +11,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { auth, signOut } from "@/auth";
 import { User, Settings, LogOut } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { ACCOUNT_ROUTE } from "@/routes";
 
-export default async function Navbar() {
-  const session = await auth();
+export default function Navbar() {
+  const session = useSession();
+  const router = useRouter();
 
   return (
     <nav className="bg-white shadow-sm dark:bg-gray-950/90">
@@ -31,11 +35,11 @@ export default async function Navbar() {
                 className="relative h-10 w-10 rounded-full">
                 <Avatar className="h-10 w-10">
                   <AvatarImage
-                    src={session?.user?.image || undefined}
+                    src={session?.data?.user?.image || undefined}
                     alt="Signed In User Image"
                   />
                   <AvatarFallback>
-                    {session?.user?.name?.charAt(0).toUpperCase()}
+                    {session?.data?.user?.name?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -44,16 +48,18 @@ export default async function Navbar() {
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm font-medium leading-none">
-                    {session?.user?.name}
+                    {session?.data?.user?.name}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    {session?.user?.email}
+                    {session?.data?.user?.email}
                   </p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>{
+                  router.push(ACCOUNT_ROUTE(session?.data?.user?.id || ""))
+                }}>
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
                 </DropdownMenuItem>
@@ -63,15 +69,10 @@ export default async function Navbar() {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <form
-                action={async () => {
-                  "use server";
-                  await signOut();
-                }}>
-                <Button className="w-full h-8 flex items-center justify-start pl-2 rounded-sm font-normal bg-transparent hover:background-secondary" variant="secondary" type="submit">
-                  <LogOut className="h-4 w-4 mr-2" /> Sign Out
-                </Button>
-              </form>
+              <DropdownMenuItem onClick={()=>signOut()}>
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Sign Out</span>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

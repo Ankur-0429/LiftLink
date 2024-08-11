@@ -131,7 +131,7 @@ function StatusList({
   };
 
   const debouncedSearchChange = React.useCallback(
-    debounce(handleSearchChange, 2000),
+    debounce(handleSearchChange, 1000),
     []
   );
 

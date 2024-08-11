@@ -63,6 +63,7 @@ const CreatePost = () => {
         departure: data.dateTime,
         from: data.fromLocation,
         to: data.toLocation,
+        participants: parseInt(data.participants),
         womenOnly,
         description: data.occasion,
       };
