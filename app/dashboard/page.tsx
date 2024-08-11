@@ -25,7 +25,8 @@ const Dashboard = () => {
         members={memberData()}
         createdAt={new Date("2024-08-08T07:25:32.653Z")}
         description="Looking for people to move to slugWatch 2022. If anyone wants to carpool with me at cameron way, feel free to message me. Looking for anyone interested."
-        ifRequestedAlready={false}
+        requestStatus="PENDING"
+        id={200}
       />
     </div>
   );

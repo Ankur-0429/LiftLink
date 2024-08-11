@@ -37,10 +37,11 @@ const UserChannelsList = ({ userId }: { userId: string }) => {
       {channels.map((e) => {
         return (
           <Channel
+            id={e.id}
             owner={e.owner}
             createdAt={e.createdAt}
             description={e.description}
-            ifRequestedAlready={e.ifRequestedAlready}
+            requestStatus={e.requestStatus}
             limit={e.limit}
             members={e.members}
             key={e.key}

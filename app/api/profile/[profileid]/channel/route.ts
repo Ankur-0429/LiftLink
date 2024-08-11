@@ -16,14 +16,22 @@ export async function GET(request: NextRequest, params: {profileid: string}) {
       query ? parseInt(query) : undefined,
     );
 
-    const dtoNewChannels: (ChannelInterface & {
-      key: number;
-    })[] = newChannels.map((e) => {
+
+    const dtoNewChannels: ChannelInterface[] = newChannels.map((e) => {
+      const isMember = e.members.some((member) => member.id === session?.user?.id);
+
+      let requestStatus: "IDLE" | "PENDING" | "MEMBER" = "IDLE";
+
+      if (isMember) {
+        requestStatus = "MEMBER";
+      }   else if (e.requests.length > 0) {
+        requestStatus = "PENDING";
+      }
       return {
-        key: e.id,
+        id: e.id,
         description: e.description,
         createdAt: e.createdAt,
-        ifRequestedAlready: true,
+        requestStatus,
         limit: e.participants,
         owner: {
           id: e.owner.id,

@@ -30,3 +30,12 @@ export const DEFAULT_LOGOUT_REDIRECT = "/";
 export const ACCOUNT_ROUTE = (userId: string) => {
     return "/dashboard/profile/" + userId;
 }
+
+/**
+ * 
+ * @param channelId the id of the channel
+ * @returns Route to show group messages
+ */
+export const CHANNEL_ROUTE = (channelId: string) => {
+    return "/dashboard/channel/" + channelId;
+}
