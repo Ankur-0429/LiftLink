@@ -42,6 +42,7 @@ const UserChannelsList = ({ userId }: { userId: string }) => {
             requestStatus={e.requestStatus}
             limit={e.limit}
             members={e.members}
+            key={e.id}
           />
         );
       })}

@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     await createChannel(parsedData);
     return NextResponse.json({}, { status: 201 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Invalid data format" },

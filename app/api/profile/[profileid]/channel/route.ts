@@ -49,7 +49,7 @@ export async function GET(request: NextRequest, params: {params: {profileid: str
     });
     return NextResponse.json({channels: dtoNewChannels, cursor: nextCursor}, { status: 200 });
   } catch(error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

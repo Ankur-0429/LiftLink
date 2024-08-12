@@ -75,8 +75,8 @@ export async function findChannel(
       jsonb_build_object('name', o.name, 'image', o.image, 'id', o.id) AS owner,
       array_agg(DISTINCT jsonb_build_object('requestId', r.id, 'userId', r."userId")) FILTER (WHERE r."userId" = $1) AS user_requests
     FROM "Channel" c
-    JOIN "Request" r ON r."channelId" = c.id
-    JOIN LATERAL (
+    LEFT JOIN "Request" r ON r."channelId" = c.id
+    LEFT JOIN LATERAL (
         SELECT
             m.name,
             m.image,
@@ -85,7 +85,7 @@ export async function findChannel(
         JOIN "User" m ON m.id = cm."B"
         WHERE cm."A" = c.id
     ) m ON true
-    JOIN "User" o ON o.id = c."ownerId"
+    LEFT JOIN "User" o ON o.id = c."ownerId"
     WHERE true
   `;
 
