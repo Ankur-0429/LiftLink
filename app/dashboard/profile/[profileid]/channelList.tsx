@@ -5,9 +5,7 @@ import { Loader2 } from "lucide-react";
 
 const UserChannelsList = ({ userId }: { userId: string }) => {
   const [channels, setChannels] = useState(
-    [] as (ChannelInterface & {
-      key: number;
-    })[]
+    [] as ChannelInterface[]
   );
   const [cursor, setCursor] = useState(undefined as number | undefined);
   const [hasMore, setHasMore] = useState(true);
@@ -44,7 +42,6 @@ const UserChannelsList = ({ userId }: { userId: string }) => {
             requestStatus={e.requestStatus}
             limit={e.limit}
             members={e.members}
-            key={e.key}
           />
         );
       })}

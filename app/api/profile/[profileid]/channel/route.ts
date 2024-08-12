@@ -4,10 +4,10 @@ import { auth } from "@/auth";
 import { findChannelsByOwner } from "@/service/userService";
 import { ChannelInterface } from "@/components/channel";
 
-export async function GET(request: NextRequest, params: {profileid: string}) {
+export async function GET(request: NextRequest, params: {params: {profileid: string}}) {
   try {
     const session = await auth();
-    const {profileid} = params;
+    const {profileid} = params.params;
     const searchParams = request.nextUrl.searchParams;
     const query = searchParams.get("cursor");
     const { channels: newChannels, nextCursor } = await findChannelsByOwner(
