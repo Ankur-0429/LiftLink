@@ -149,3 +149,32 @@ export const acceptRequest = async (requestId: number, channelId: number, userId
     });
   });
 };
+
+/**
+ * 
+ * @param requestId 
+ * @param channelId 
+ * @param userId id of user making the request 
+ * @param currentUserId id of the user found from session. Used to confirm that person making this request owns channel
+ */
+export const rejectRequest = async (requestId: number, channelId: number, currentUserId: string) => {
+  const channel = await db.channel.findFirst({
+    where: {
+      id: channelId,
+      ownerId: currentUserId,
+    },
+  });
+
+  if (!channel) {
+    throw new Error('You do not have permission to reject this request.');
+  }
+
+  await db.request.update({
+    where: {
+      id: requestId
+    },
+    data: {
+      status: "REJECTED"
+    }
+  })
+};

@@ -34,6 +34,10 @@ const ProfileRequest = (
       requestId: number,
       userId: string
     ) => {};
+    rejectRequests: (
+      channelId: number,
+      requestId: number,
+    ) => {};
   }
 ) => {
   const router = useRouter();
@@ -109,7 +113,12 @@ const ProfileRequest = (
         </div>
       </div>
       <div className="flex items-center gap-x-3 ml-auto justify-end">
-        <Button className="w-32" variant="destructive">
+        <Button onClick={() => {
+          request.rejectRequests(
+            request.channelId,
+            request.id
+          );
+        }} className="w-32" variant="destructive">
           Reject
         </Button>
         <Button
@@ -176,6 +185,35 @@ const ProfileRequestList = () => {
     }
   };
 
+  const rejectRequests = async (
+    channelId: number,
+    requestId: number,
+  ) => {
+    const params = {
+      channelId: channelId.toString(),
+      requestId: requestId.toString(),
+    };
+    const query = new URLSearchParams(params).toString();
+    const requestToRemove = requests.find((item) => item.id === requestId);
+    setRequests((prevItems) =>
+      prevItems.filter((item) => item.id !== requestId)
+    );
+
+    try {
+      const response = await fetch("/api/profile/request?" + query, {
+        method: "PUT",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to accept request");
+      }
+    } catch (error) {
+      if (requestToRemove) {
+        setRequests((prevItems) => [requestToRemove, ...prevItems]);
+      }
+    }
+  };
+
   const handleLoadMore = () => {
     if (hasMore) {
       fetchRequests();
@@ -197,6 +235,7 @@ const ProfileRequestList = () => {
               members={e.members}
               createdAt={e.createdAt}
               acceptRequests={acceptRequests}
+              rejectRequests={rejectRequests}
             />
             <Separator />
           </>

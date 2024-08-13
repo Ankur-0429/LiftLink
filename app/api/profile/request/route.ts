@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { acceptRequest, getProfileRequests } from "@/service/requestService";
+import { acceptRequest, getProfileRequests, rejectRequest } from "@/service/requestService";
 import { ProfileRequestInterface } from "@/app/dashboard/profile/request/requestList";
 
 export async function GET(request: NextRequest) {
@@ -51,7 +51,21 @@ export async function POST(request: NextRequest) {
     const channelId = searchParams.get("channelId");
     const userId = searchParams.get("userId");
     await acceptRequest(parseInt(requestId || ""), parseInt(channelId || ""), userId || "", session?.user?.id || "");
-    return NextResponse.json({}, { status: 200 });
+    return NextResponse.json(null, { status: 200 });
+  } catch(error) {
+    console.error(error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const session = await auth();
+    const searchParams = request.nextUrl.searchParams;
+    const requestId = searchParams.get("requestId");
+    const channelId = searchParams.get("channelId");
+    await rejectRequest(parseInt(requestId || ""), parseInt(channelId || ""), session?.user?.id || "");
+    return NextResponse.json(null, { status: 200 });
   } catch(error) {
     console.error(error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

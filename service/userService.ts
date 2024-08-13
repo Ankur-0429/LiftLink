@@ -54,7 +54,7 @@ export const findChannelsByOwner = async (
       }
     },
     orderBy: {
-      departure: "asc",
+      departure: "desc",
     },
   });
 

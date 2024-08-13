@@ -39,3 +39,5 @@ export const ACCOUNT_ROUTE = (userId: string) => {
 export const CHANNEL_ROUTE = (channelId: string) => {
     return "/dashboard/channel/" + channelId;
 }
+
+export const REQUESTS_ROUTE = "/dashboard/profile/request";

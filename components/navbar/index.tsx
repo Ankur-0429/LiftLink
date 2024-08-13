@@ -11,10 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Settings, LogOut } from "lucide-react";
+import { User, Settings, LogOut, Mail } from "lucide-react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ACCOUNT_ROUTE } from "@/routes";
+import { ACCOUNT_ROUTE, REQUESTS_ROUTE } from "@/routes";
 
 export default function Navbar() {
   const session = useSession();
@@ -62,6 +62,12 @@ export default function Navbar() {
                 }}>
                   <User className="mr-2 h-4 w-4" />
                   <span>Profile</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={()=>{
+                  router.push(REQUESTS_ROUTE)
+                }}>
+                  <Mail className="mr-2 h-4 w-4" />
+                  <span>Requests</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Settings className="mr-2 h-4 w-4" />
