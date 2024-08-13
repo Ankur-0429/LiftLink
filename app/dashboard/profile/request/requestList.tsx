@@ -171,7 +171,7 @@ const ProfileRequestList = () => {
       }
     } catch (error) {
       if (requestToRemove) {
-        setRequests((prevItems) => [...prevItems, requestToRemove]);
+        setRequests((prevItems) => [requestToRemove, ...prevItems]);
       }
     }
   };
