@@ -3,14 +3,12 @@ import LocationInput from "@/components/locationInput";
 import { MapPin, Search } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { DateTimePicker } from "@/components/ui/datetime-picker";
-import { useState } from "react";
-import { Status } from "@/type";
 import DatePicker from "@/components/ui/date-picker";
+import { useState } from "react";
 
-export default function ParentComponent() {
-  const [fromStatus, setFromStatus] = useState(null as Status | null);
-  const [toStatus, setToStatus] = useState(null as Status | null);
+export default function Filters() {
+  const [fromStatus, setFromStatus] = useState(null as {address: string; latitude: number; longitude: number} | null);
+  const [toStatus, setToStatus] = useState(null as {address: string; latitude: number; longitude: number;} | null);
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (

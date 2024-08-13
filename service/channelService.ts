@@ -1,5 +1,5 @@
 import db from "@/lib/db";
-import { Channel } from "@/type";
+import { Channel } from "@/app/api/channel/route";
 
 /**
  *

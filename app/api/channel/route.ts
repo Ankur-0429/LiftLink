@@ -1,10 +1,29 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { createChannel, findChannel } from "@/service/channelService";
-import { channelSchema } from "@/type";
-import { z } from "zod";
 import { auth } from "@/auth";
 import { ChannelInterface } from "@/components/channel";
+import {z} from "zod"
+
+const channelSchema = z.object({
+  description: z.string(),
+  departure: z.date(),
+  from: z.object({
+    latitude: z.number(),
+    longitude: z.number(),
+    address: z.string()
+  }),
+  to: z.object({
+    latitude: z.number(),
+    longitude: z.number(),
+    address: z.string()
+  }),
+  womenOnly: z.boolean(),
+  participants: z.number(),
+  ownerId: z.string(),
+});
+
+export type Channel = z.infer<typeof channelSchema>;
 
 export async function POST(request: NextRequest) {
   try {

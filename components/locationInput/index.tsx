@@ -18,10 +18,9 @@ import {
 } from "@/components/ui/popover";
 import { X } from "lucide-react";
 import { Skeleton } from "../ui/skeleton";
-import { Status } from "@/type";
 
 type LocationInputProps = {
-  onStatusChange: (status: Status | null) => void;
+  onStatusChange: (status: {address: string; latitude: number; longitude: number;} | null) => void;
   placeholder: string;
   icon: React.ReactNode;
 };
@@ -32,7 +31,7 @@ export default function LocationInput({
   icon,
 }: LocationInputProps) {
   const [open, setOpen] = React.useState(false);
-  const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
+  const [selectedStatus, setSelectedStatus] = React.useState<{address: string; latitude: number; longitude: number;} | null>(
     null
   );
 
@@ -42,7 +41,7 @@ export default function LocationInput({
     setSelectedStatus(null);
   };
 
-  const handleStatusSelect = (status: Status | null) => {
+  const handleStatusSelect = (status: {address: string; latitude: number; longitude: number;} | null) => {
     setSelectedStatus(status);
     onStatusChange(status);
     setOpen(false);
