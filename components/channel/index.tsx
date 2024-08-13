@@ -52,7 +52,7 @@ const Channel = ({
             <Avatar
               className={cn(
                 "h-12 w-12",
-                isClickableToUserAccountPage && "cursor-pointer"
+                isClickableToUserAccountPage && "cursor-pointer hover:border-2 border-foreground transition"
               )}
               onClick={() => {
                 if (!isClickableToUserAccountPage) return;
@@ -93,7 +93,7 @@ const Channel = ({
                   <Avatar
                     key={e.image}
                     className={cn(
-                      isClickableToUserAccountPage && "cursor-pointer"
+                      isClickableToUserAccountPage && "cursor-pointer hover:border-2 border-foreground transition"
                     )}
                     onClick={() => {
                       if (!isClickableToUserAccountPage) return;

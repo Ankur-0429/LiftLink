@@ -74,6 +74,7 @@ model Request {
   channelId Int
   status    RequestStatus @default(PENDING)
 
+  createdAt DateTime @default(now())
   user    User    @relation("UserRequests", fields: [userId], references: [id], onDelete: Cascade)
   channel Channel @relation("ChannelRequests", fields: [channelId], references: [id], onDelete: Cascade)
 
