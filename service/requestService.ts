@@ -114,3 +114,38 @@ export const getProfileRequests = async (
     nextCursor,
   };
 };
+
+/**
+ * 
+ * @param requestId 
+ * @param channelId 
+ * @param userId id of user making the request 
+ * @param currentUserId id of the user found from session. Used to confirm that person making this request owns channel
+ */
+export const acceptRequest = async (requestId: number, channelId: number, userId: string, currentUserId: string) => {
+  const channel = await db.channel.findFirst({
+    where: {
+      id: channelId,
+      ownerId: currentUserId,
+    },
+  });
+
+  if (!channel) {
+    throw new Error('You do not have permission to accept this request.');
+  }
+  
+  await db.$transaction(async (prisma) => {
+    await prisma.request.delete({
+      where: { id: requestId },
+    });
+
+    await prisma.channel.update({
+      where: { id: channelId },
+      data: {
+        members: {
+          connect: { id: userId },
+        },
+      },
+    });
+  });
+};

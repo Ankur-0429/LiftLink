@@ -7,7 +7,7 @@ import { ACCOUNT_ROUTE, CHANNEL_ROUTE } from "@/routes";
 import { EllipsisVertical, Loader2 } from "lucide-react";
 import moment from "moment";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export interface ProfileRequestInterface {
   requestingUser: {
@@ -27,7 +27,9 @@ export interface ProfileRequestInterface {
   id: number;
 }
 
-const ProfileRequest = (request: ProfileRequestInterface) => {
+const ProfileRequest = (request: ProfileRequestInterface & {
+  acceptRequests: (channelId: number, requestId: number, userId: string) => {}
+}) => {
   const router = useRouter();
   return (
     <div className="p-4">
@@ -104,40 +106,55 @@ const ProfileRequest = (request: ProfileRequestInterface) => {
         <Button className="w-32" variant="destructive">
           Reject
         </Button>
-        <Button className="w-32">Accept</Button>
+        <Button onClick={()=>{request.acceptRequests(request.channelId, request.id, request.requestingUser.id)}} className="w-32">Accept</Button>
       </div>
     </div>
   );
 };
 
 const ProfileRequestList = () => {
-  const [channels, setChannels] = useState([] as ProfileRequestInterface[]);
+  const [requests, setRequests] = useState([] as ProfileRequestInterface[]);
   const [cursor, setCursor] = useState(undefined as number | undefined);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const fetchChannels = async () => {
+  const fetchRequests = async () => {
     setLoading(true);
     const response = await fetch(
       "/api/profile/request" + "?cursor=" + cursor
     );
     if (!response.ok) return;
     const data = await response.json();
-    setChannels((prev) => [...prev, ...data.channels]);
+    setRequests((prev) => [...prev, ...data.requests]);
     setCursor(data.cursor);
     setHasMore(data.cursor !== undefined);
     setLoading(false);
   };
 
+  const acceptRequests = async (channelId: number, requestId: number, userId: string) => {
+    const params = {
+      channelId: channelId.toString(),
+      requestId: requestId.toString(),
+      userId 
+    }
+    const query = new URLSearchParams(params).toString();
+    const response = await fetch("/api/profile/request?"+query, {
+      method: "POST"
+    });
+    if (response.ok) {
+      setRequests((prevItems) => prevItems.filter(item => item.id !== requestId));
+    }
+  }
+
   const handleLoadMore = () => {
     if (hasMore) {
-      fetchChannels();
+      fetchRequests();
     }
   };
 
   return (
     <div>
-      {channels.map((e) => {
+      {requests.map((e) => {
         return (
           <>
             <ProfileRequest
@@ -149,6 +166,7 @@ const ProfileRequestList = () => {
               participants={e.participants}
               members={e.members}
               createdAt={e.createdAt}
+              acceptRequests={acceptRequests}
             />
             <Separator />
           </>
