@@ -22,7 +22,7 @@ export const requestChannel = async (channelid: number, userid: string) => {
       if (isMember) throw new Error("Member already exists");
 
       const memberCount = channel.members.length;
-      if (memberCount >= channel.members.length) throw new Error("max member limit reached");
+      if (memberCount > channel.members.length) throw new Error("max member limit reached");
 
       const existingRequest = await db.request.findUnique({
         where: {
