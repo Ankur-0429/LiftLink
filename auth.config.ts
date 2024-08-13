@@ -6,11 +6,11 @@ export default {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      // authorization: {
-      //   params: {
-      //     hd: 'ucsc.edu'
-      //   }
-      // }
+      authorization: {
+        params: {
+          hd: 'ucsc.edu'
+        }
+      }
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET as string,
