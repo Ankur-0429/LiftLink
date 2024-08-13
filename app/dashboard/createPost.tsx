@@ -144,7 +144,7 @@ const CreatePost = () => {
         />
 
         <Textarea
-          className="my-5"
+          className="my-5 text-base"
           placeholder="What's the occassion?"
           value={occasion}
           onChange={(e) => {
