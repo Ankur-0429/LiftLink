@@ -69,7 +69,7 @@ const MessageChannel = () => {
       })}
       <div className="fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 p-3">
         <div className="max-w-screen-lg mx-auto">
-          <Textarea placeholder="Type your message..." />
+          <Textarea placeholder="Type your message..." className="text-base" />
         </div>
       </div>
     </div>
