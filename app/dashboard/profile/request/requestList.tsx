@@ -27,9 +27,15 @@ export interface ProfileRequestInterface {
   id: number;
 }
 
-const ProfileRequest = (request: ProfileRequestInterface & {
-  acceptRequests: (channelId: number, requestId: number, userId: string) => {}
-}) => {
+const ProfileRequest = (
+  request: ProfileRequestInterface & {
+    acceptRequests: (
+      channelId: number,
+      requestId: number,
+      userId: string
+    ) => {};
+  }
+) => {
   const router = useRouter();
   return (
     <div className="p-4">
@@ -106,7 +112,17 @@ const ProfileRequest = (request: ProfileRequestInterface & {
         <Button className="w-32" variant="destructive">
           Reject
         </Button>
-        <Button onClick={()=>{request.acceptRequests(request.channelId, request.id, request.requestingUser.id)}} className="w-32">Accept</Button>
+        <Button
+          onClick={() => {
+            request.acceptRequests(
+              request.channelId,
+              request.id,
+              request.requestingUser.id
+            );
+          }}
+          className="w-32">
+          Accept
+        </Button>
       </div>
     </div>
   );
@@ -120,9 +136,7 @@ const ProfileRequestList = () => {
 
   const fetchRequests = async () => {
     setLoading(true);
-    const response = await fetch(
-      "/api/profile/request" + "?cursor=" + cursor
-    );
+    const response = await fetch("/api/profile/request" + "?cursor=" + cursor);
     if (!response.ok) return;
     const data = await response.json();
     setRequests((prev) => [...prev, ...data.requests]);
@@ -131,20 +145,36 @@ const ProfileRequestList = () => {
     setLoading(false);
   };
 
-  const acceptRequests = async (channelId: number, requestId: number, userId: string) => {
+  const acceptRequests = async (
+    channelId: number,
+    requestId: number,
+    userId: string
+  ) => {
     const params = {
       channelId: channelId.toString(),
       requestId: requestId.toString(),
-      userId 
-    }
+      userId,
+    };
     const query = new URLSearchParams(params).toString();
-    const response = await fetch("/api/profile/request?"+query, {
-      method: "POST"
-    });
-    if (response.ok) {
-      setRequests((prevItems) => prevItems.filter(item => item.id !== requestId));
+    const requestToRemove = requests.find((item) => item.id === requestId);
+    setRequests((prevItems) =>
+      prevItems.filter((item) => item.id !== requestId)
+    );
+
+    try {
+      const response = await fetch("/api/profile/request?" + query, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to accept request");
+      }
+    } catch (error) {
+      if (requestToRemove) {
+        setRequests((prevItems) => [...prevItems, requestToRemove]);
+      }
     }
-  }
+  };
 
   const handleLoadMore = () => {
     if (hasMore) {
