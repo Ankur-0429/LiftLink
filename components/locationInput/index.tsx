@@ -88,10 +88,10 @@ function StatusList({
   setSelectedStatus,
 }: {
   setOpen: (open: boolean) => void;
-  setSelectedStatus: (status: Status | null) => void;
+  setSelectedStatus: (status: {address: string; latitude: number, longitude: number;} | null) => void;
 }) {
   const [value, setValue] = React.useState("");
-  const [statuses, setStatuses] = React.useState([] as Status[]);
+  const [statuses, setStatuses] = React.useState([] as {address: string; latitude: number, longitude: number;}[]);
   const [isLoading, setIsLoading] = React.useState(false);
 
   const handleSearchChange = async (query: string) => {
