@@ -68,7 +68,7 @@ const DashboardChannelsList = ({ filterData }: DashboardChannelsListProps) => {
       setLoading(false);
       return;
     }
-    setHasMore(data.length < 10);
+    setHasMore(data.channels.length === 10);
     setChannels((prev) => [...prev, ...data.channels]);
     setOffset((prev) => prev + 10);
     setLoading(false);
