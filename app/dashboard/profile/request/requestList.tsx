@@ -1,14 +1,15 @@
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import InfiniteScroll from "@/components/ui/infinite-scroll";
 import { Separator } from "@/components/ui/separator";
 import { ACCOUNT_ROUTE, CHANNEL_ROUTE } from "@/routes";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Loader2 } from "lucide-react";
 import moment from "moment";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface ProfileRequestProps {
+export interface ProfileRequestInterface {
   requestingUser: {
     name?: string;
     image?: string;
@@ -22,11 +23,11 @@ interface ProfileRequestProps {
   createdAt: Date;
   participants: number;
   description: string;
-  channelId: string;
-  id: string;
+  channelId: number;
+  id: number;
 }
 
-const ProfileRequest = (request: ProfileRequestProps) => {
+const ProfileRequest = (request: ProfileRequestInterface) => {
   const router = useRouter();
   return (
     <div className="p-4">
@@ -46,7 +47,9 @@ const ProfileRequest = (request: ProfileRequestProps) => {
         </Avatar>
         <div className="leading-none">
           <p>
-            <span className="font-semibold hover:underline cursor-pointer">{request.requestingUser.name}</span>{" "}
+            <span className="font-semibold hover:underline cursor-pointer">
+              {request.requestingUser.name}
+            </span>{" "}
             requests to join your carpool.
           </p>
           <span className="text-muted-foreground text-xs">
@@ -54,9 +57,11 @@ const ProfileRequest = (request: ProfileRequestProps) => {
           </span>
         </div>
       </div>
-      <div onClick={() => {
-        router.push(CHANNEL_ROUTE(request.channelId))
-      }} className="ml-12 border-border border-2 my-3 rounded-lg cursor-pointer hover:bg-muted transition">
+      <div
+        onClick={() => {
+          router.push(CHANNEL_ROUTE(request.channelId.toString()));
+        }}
+        className="ml-12 border-border border-2 my-3 rounded-lg cursor-pointer hover:bg-muted transition">
         <div className="p-2 flex flex-col gap-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -106,37 +111,60 @@ const ProfileRequest = (request: ProfileRequestProps) => {
 };
 
 const ProfileRequestList = () => {
-  const [requests, setRequests] = useState([] as ProfileRequestProps[]);
-  useEffect(() => {
-    setRequests([
-      {
-        channelId: "3",
-        description: "Hi everyone,I hope this message finds you well! I’m reaching out to see if anyone is interested in carpooling with me to the conference downtown next week. The event will be held at the City Convention Center from Monday, August 14th through Friday, August 18th, and I’m looking to share a ride to make the commute more enjoyable and eco-friendly.If you’re interested, please let me know your preferred pickup location and any specific timing preferences you might have. I’m happy to adjust my schedule to make this work for everyone involved. I’d love to coordinate with a few people to make the drive more pleasant and perhaps even discuss some of the sessions and speakers we’re looking forward to during the conference.Additionally, if you have any questions or suggestions about the carpool arrangement, feel free to reach out. I’m looking forward to hearing from you and hopefully making our daily commutes a little bit easier!",
-        id: "8",
-        participants: 5,
-        members: [{ id: "30", name: "Gilbert", image: "test" }],
-        requestingUser: { id: "7", name: "Gilbert", image: undefined },
-        createdAt: new Date(),
-      },
-    ]);
-  }, []);
-  return requests.map((e) => {
-    return (
-      <>
-      <ProfileRequest
-        key={e.id}
-        requestingUser={e.requestingUser}
-        channelId={e.channelId}
-        description={e.description}
-        id={e.id}
-        participants={e.participants}
-        members={e.members}
-        createdAt={e.createdAt}
-      />
-      <Separator />
-      </>
+  const [channels, setChannels] = useState([] as ProfileRequestInterface[]);
+  const [cursor, setCursor] = useState(undefined as number | undefined);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  const fetchChannels = async () => {
+    setLoading(true);
+    const response = await fetch(
+      "/api/profile/request" + "?cursor=" + cursor
     );
-  });
+    if (!response.ok) return;
+    const data = await response.json();
+    setChannels((prev) => [...prev, ...data.channels]);
+    setCursor(data.cursor);
+    setHasMore(data.cursor !== undefined);
+    setLoading(false);
+  };
+
+  const handleLoadMore = () => {
+    if (hasMore) {
+      fetchChannels();
+    }
+  };
+
+  return (
+    <div>
+      {channels.map((e) => {
+        return (
+          <>
+            <ProfileRequest
+              key={e.id}
+              requestingUser={e.requestingUser}
+              channelId={e.channelId}
+              description={e.description}
+              id={e.id}
+              participants={e.participants}
+              members={e.members}
+              createdAt={e.createdAt}
+            />
+            <Separator />
+          </>
+        );
+      })}
+      <InfiniteScroll
+        hasMore={hasMore}
+        next={handleLoadMore}
+        isLoading={loading}
+        threshold={1}>
+        {hasMore && (
+          <Loader2 className="my-4 h-8 w-8 animate-spin bg-transparent mx-auto" />
+        )}
+      </InfiniteScroll>
+    </div>
+  );
 };
 
 export default ProfileRequestList;
