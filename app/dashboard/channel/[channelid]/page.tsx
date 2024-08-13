@@ -3,11 +3,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { ACCOUNT_ROUTE } from "@/routes";
-import { Dot } from "lucide-react";
 import moment from "moment";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 interface MessageInterface {
   message: string;
@@ -34,18 +32,6 @@ const dummyData: MessageInterface[] = [
 const MessageChannel = () => {
   const router = useRouter();
   const session = useSession();
-  const [keyboardOffset, setKeyboardOffset] = useState(0);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setKeyboardOffset(
-        window.innerHeight < document.documentElement.clientHeight ? 300 : 0
-      );
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
   return (
     <div className="max-w-screen-lg mx-auto border-l-[1px] border-r-[1px]">
       {dummyData.map((e) => {
