@@ -11,7 +11,6 @@ const db = prisma.$extends({
   model: {
     channel: {
       async create(data: Channel) {
-        console.log(data);
         const fromPoint = `POINT(${data.from.longitude} ${data.from.latitude})`;
         const toPoint = `POINT(${data.to.longitude} ${data.to.latitude})`;
         await prisma.$queryRaw`

@@ -45,7 +45,7 @@ interface findChannelOutput {
  * @param offset the starting index to query by. Used for pagination
  * @param fromLocation filters by location user wants to carpool from
  * @param toLocation filters by location user wants to go to
- * @param timeOfDay 
+ * @param timeOfDay filters by date. Defaults to all channels after current date. Use ISOstring 
  * @returns 
  */
 export async function findChannel(
@@ -60,12 +60,12 @@ export async function findChannel(
     latitude: number;
     longitude: number;
   },
-  timeOfDay?: Date,
+  timeOfDay?: string,
 ) {
-  function getNextDay(date: Date) {
+  function getNextDay(date: string) {
     const nextDay = new Date(date);
     nextDay.setDate(nextDay.getDate() + 1);
-    return nextDay;
+    return nextDay.toISOString();
   }
   const bindings: any[] = [currentUserId, womenOnly, offset];
 
@@ -112,11 +112,11 @@ export async function findChannel(
   }
 
   if (timeOfDay) {
-    const nextDay = getNextDay(timeOfDay).toISOString();
+    const nextDay = getNextDay(timeOfDay);
     query += `
       AND c.departure BETWEEN $${bindings.length + 1}::timestamp AND $${bindings.length + 2}::timestamp
     `;
-    bindings.push(timeOfDay.toISOString(), nextDay);
+    bindings.push(timeOfDay, nextDay);
   } else {
     query += `
       AND c.departure > $${bindings.length + 1}::timestamp

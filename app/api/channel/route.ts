@@ -53,11 +53,7 @@ export async function GET(request: NextRequest) {
   const session = await auth();
   const searchParams = request.nextUrl.searchParams;
   const offset = parseInt(searchParams.get("offset") || "0");
-  const departure = searchParams.get("departure");
-  let timeOfDay = undefined;
-  if (departure) {
-    timeOfDay = new Date(departure);
-  }
+  const departure = searchParams.get("timeOfDay");
   const womenOnly = searchParams.get("womenOnly");
   const isWomenOnly = womenOnly === "true";
   const fromLatitude = searchParams.get("fromLatitude");
@@ -82,7 +78,7 @@ export async function GET(request: NextRequest) {
   const currentUserId = session?.user?.id || "0";
 
   try {
-    const data = await findChannel(currentUserId, isWomenOnly, offset, fromLocation, toLocation, timeOfDay)
+    const data = await findChannel(currentUserId, isWomenOnly, offset, fromLocation, toLocation, departure || undefined)
     const channelDto: ChannelInterface[] = data.map((e) => {
       const isMember = e.members && e.members.some((member) => member.id === session?.user?.id);
 
