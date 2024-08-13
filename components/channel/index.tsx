@@ -36,14 +36,13 @@ const Channel = ({
   requestStatus,
   id
 }: ChannelInterface) => {
-  const session = useSession();
   const params = useParams<{ profileid: string }>();
   const router = useRouter();
 
   const [status, setStatus] = useState(requestStatus);
 
   const isClickableToUserAccountPage =
-    params.profileid && params.profileid !== owner.id;
+    !params.profileid || params.profileid !== owner.id;
 
   return (
     <>
