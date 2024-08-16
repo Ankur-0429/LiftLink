@@ -85,7 +85,7 @@ const MessageList = ({
 
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
-  const latestMessageIdRef = useRef(null);
+  const latestMessageIdRef = useRef<null | number>(null);
 
   const fetchMessages = async () => {
     setLoading(true);
@@ -145,6 +145,7 @@ const MessageList = ({
     setMessages((prevMessages) => [data.messages, ...prevMessages]);
     console.log("new data: ", data.messages);
     latestMessageIdRef.current = data.messages[0].id;
+    console.log("gooood here")
   };
   useEffect(() => {
     const intervalId = setInterval(poll, 3000);
