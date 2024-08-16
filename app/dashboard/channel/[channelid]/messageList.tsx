@@ -32,9 +32,6 @@ export interface MessageInterface {
 const Message = ({ message }: { message: MessageInterface }) => {
   const session = useSession();
   const router = useRouter();
-  console.log(message);
-  console.log("-------")
-  console.log(session.data)
   const isUser = session.data?.user?.id === message.user.id;
   return (
     <div
@@ -144,7 +141,7 @@ const MessageList = ({
     if (!newMessages.ok) return;
     const data = await newMessages.json();
     if (data.messages.length === 0) return;
-    setMessages((prevMessages) => [data.messages, ...prevMessages]);
+    setMessages((prevMessages) => [...data.messages, ...prevMessages]);
     latestMessageIdRef.current = data.messages[0].id;
   };
   useEffect(() => {
