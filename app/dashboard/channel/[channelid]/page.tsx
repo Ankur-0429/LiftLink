@@ -13,31 +13,29 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const id = params.channelid;
   try {
-
-  const data = await db.channel.findUnique({
-    where: {
-      id: parseInt(id)
-    },
-    select: {
-      owner: {
-        select: {
-          name: true,
-        }
+    const data = await db.channel.findUnique({
+      where: {
+        id: parseInt(id),
       },
-      description: true,
-    }
-  })
-  const previousImages = (await parent).openGraph?.images || [];
+      select: {
+        owner: {
+          select: {
+            name: true,
+          },
+        },
+        description: true,
+      },
+    });
+    const previousImages = (await parent).openGraph?.images || [];
 
-  return {
-    title:
-      "Join " + (data && data.owner.name) || "" + "'s Carpool",
-    description: (data && data.description),
+    return {
+      title: "Join " + (data && data.owner.name) || "" + "'s Carpool",
+      description: data && data.description,
       openGraph: {
-      images: [...previousImages],
-    },
-  };
-  } catch(error) {
+        images: [...previousImages],
+      },
+    };
+  } catch (error) {
     console.error("An error occurred while fetching the channel data:", error);
     return {
       title: "Error Loading Channel",
