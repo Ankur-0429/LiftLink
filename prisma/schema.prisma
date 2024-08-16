@@ -82,7 +82,7 @@ model Request {
 }
 
 model Message {
-  id        String   @id @default(cuid())
+  id        Int   @id @default(autoincrement())
   content   String
   createdAt DateTime @default(now())
   userId    String
