@@ -3,13 +3,14 @@
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import moment from "moment";
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Share2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
 import { ACCOUNT_ROUTE, CHANNEL_ROUTE } from "@/routes";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { RWebShare } from "react-web-share";
 
 type UserType = {
   name?: string;
@@ -34,7 +35,7 @@ const Channel = ({
   createdAt,
   description,
   requestStatus,
-  id
+  id,
 }: ChannelInterface) => {
   const params = useParams<{ profileid: string }>();
   const router = useRouter();
@@ -44,6 +45,12 @@ const Channel = ({
   const isClickableToUserAccountPage =
     !params.profileid || params.profileid !== owner.id;
 
+  const shareData = {
+    title: `Join ${owner.name}'s Carpool`,
+    text: "Share Link",
+    url: process.env.NEXT_PUBLIC_BASE_URL + "/dashboard/channel/" + id,
+  };
+
   return (
     <>
       <div className="p-4">
@@ -52,7 +59,8 @@ const Channel = ({
             <Avatar
               className={cn(
                 "h-12 w-12",
-                isClickableToUserAccountPage && "cursor-pointer hover:border-2 border-foreground transition"
+                isClickableToUserAccountPage &&
+                  "cursor-pointer hover:border-2 border-foreground transition"
               )}
               onClick={() => {
                 if (!isClickableToUserAccountPage) return;
@@ -93,7 +101,8 @@ const Channel = ({
                   <Avatar
                     key={e.image}
                     className={cn(
-                      isClickableToUserAccountPage && "cursor-pointer hover:border-2 border-foreground transition"
+                      isClickableToUserAccountPage &&
+                        "cursor-pointer hover:border-2 border-foreground transition"
                     )}
                     onClick={() => {
                       if (!isClickableToUserAccountPage) return;
@@ -113,36 +122,47 @@ const Channel = ({
             </p>
           </div>
           <p className="mb-3">{description}</p>
-          {status === "PENDING" && (
-            <Button variant="secondary" className="w-32 cursor-default">
-              Requested
-            </Button>
-          )}
-          {status === "EXPIRED" && (
-            <Button variant="secondary" className="w-32 cursor-default">
-              EXPIRED
-            </Button>
-          )}
-          {status === "IDLE" && (
-            <Button onClick={() => {
-              const makeRequest = async() => {
-                await fetch("/api/channel/" + id.toString() + "/request", {
-                  method: "POST"
-                })
-              };
-              makeRequest();
-              setStatus("PENDING");
-            }} className="w-32">
-              Request to Join
-            </Button>
-          )}
-          {status === "MEMBER" && (
-            <Button variant="outline" onClick={() => {
-              router.push(CHANNEL_ROUTE(id.toString()))
-            }} className="w-32">
-              Message Group
-            </Button>
-          )}
+          <div className="flex items-center gap-x-3">
+            {status === "PENDING" && (
+              <Button variant="secondary" className="w-32 cursor-default">
+                Requested
+              </Button>
+            )}
+            {status === "EXPIRED" && (
+              <Button variant="secondary" className="w-32 cursor-default">
+                EXPIRED
+              </Button>
+            )}
+            {status === "IDLE" && (
+              <Button
+                onClick={() => {
+                  const makeRequest = async () => {
+                    await fetch("/api/channel/" + id.toString() + "/request", {
+                      method: "POST",
+                    });
+                  };
+                  makeRequest();
+                  setStatus("PENDING");
+                }}
+                className="w-32">
+                Request to Join
+              </Button>
+            )}
+            {status === "MEMBER" && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  router.push(CHANNEL_ROUTE(id.toString()));
+                }}
+                className="w-32">
+                Message Group
+              </Button>
+            )}
+
+            <RWebShare data={shareData}>
+              <Share2 size="20" />
+            </RWebShare>
+          </div>
         </div>
       </div>
       <Separator />
