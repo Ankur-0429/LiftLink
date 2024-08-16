@@ -6,9 +6,32 @@ import MessageList, { MessageInterface } from "./messageList";
 import Channel, { ChannelInterface } from "@/components/channel";
 import { Loader2 } from "lucide-react";
 
-const MessageChannel = () => {
+import type { Metadata, ResolvingMetadata } from 'next'
+ 
+type Props = {
+  params: { channelid: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+ 
+export async function generateMetadata(
+  { params, searchParams }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const id = params.channelid
+  const response = await fetch(`/api/channel?channelId=${id}`).then((res) => res.json());
+  const previousImages = (await parent).openGraph?.images || []
+
+  return {
+    title: "Join " + response && response[0] && response[0].owner.name + "'s Carpool",
+    openGraph: {
+      images: [...previousImages],
+    },
+  }
+}
+
+const MessageChannel = ({ params, searchParams }: Props) => {
   const [messages, setMessages] = useState([] as MessageInterface[]);
-  const { channelid } = useParams<{ channelid: string }>();
+  const { channelid } = params;
   const [channel, setChannel] = useState(
     undefined as undefined | ChannelInterface
   );
