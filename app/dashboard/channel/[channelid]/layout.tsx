@@ -1,5 +1,5 @@
 import { Inter } from "next/font/google";
-import type { Metadata, ResolvingMetadata } from "next";
+import type { Metadata } from "next";
 import db from "@/lib/db";
 import "@/app/globals.css";
 
@@ -12,7 +12,7 @@ type Props = {
 
 export async function generateMetadata({
   params,
-}: Props): Promise<Metadata> {
+}: Props): Promise<Partial<Metadata>> {
   const id = params.channelid;
   try {
     const data = await db.channel.findUnique({

@@ -1,10 +1,6 @@
 import MessageChannel from "./MessageChannel";
 
-type Props = {
-  params: { channelid: string };
-};
-
-const ChannelPage = ({ params }: Props) => {
+const ChannelPage = ({ params }: {params: {channelid: string}}) => {
   return <MessageChannel channelid={params.channelid} />;
 };
 
