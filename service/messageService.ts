@@ -90,3 +90,58 @@ export const getChannelMessages = async (
     nextCursor,
   };
 };
+
+/**
+ * Fetches all new messages in a channel since a specific messageId, excluding that messageId itself.
+ * 
+ * @param channelId - The ID of the channel.
+ * @param messageId - The ID of the message to exclude.
+ * @param currentUserId - The ID found from session
+ * @returns A promise that resolves to an array of new messages.
+ */
+export async function getNewMessagesSince(channelId: number, messageId: number, currentUserId: string) {
+  try {
+    const isMember = await db.channel.findFirst({
+      where: {
+        id: channelId,
+        members: {
+          some: {
+            id: currentUserId,
+          },
+        },
+      },
+    });
+  
+    if (!isMember) {
+      throw new Error("User is not a member of the channel");
+    }
+    const newMessages = await db.message.findMany({
+      where: {
+        channelId: channelId,
+        id: {
+          gt: messageId,
+        },
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        content: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    return newMessages;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Unable to fetch new messages.');
+  }
+}

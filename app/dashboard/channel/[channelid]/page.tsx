@@ -26,7 +26,7 @@ const MessageChannel = () => {
         setMessages={setMessages}
         channelId={channelid}
       />
-      <div className="mt-3">
+      <div className="my-3">
         <ChatInput
           channelId={channelid}
           messages={messages}

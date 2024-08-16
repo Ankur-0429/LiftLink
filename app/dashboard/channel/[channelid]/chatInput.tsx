@@ -76,11 +76,11 @@ const ChatInput = ({ channelId, messages, setMessages }: ChatInputProps) => {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <div className="relative h-10 w-full">
+                <div className="relative h-10 w-full px-3">
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 text-blue-500 z-10"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-500 z-10"
                     variant="ghost">
                     <Send />
                   </Button>

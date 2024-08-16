@@ -8,7 +8,14 @@ import { Loader2 } from "lucide-react";
 import moment from "moment";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Dispatch, ElementRef, SetStateAction, useEffect, useRef, useState } from "react";
+import {
+  Dispatch,
+  ElementRef,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useChatScroll } from "./useChatScroll";
 
 export interface MessageInterface {
@@ -78,6 +85,7 @@ const MessageList = ({
 
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
+  const latestMessageIdRef = useRef(null);
 
   const fetchMessages = async () => {
     setLoading(true);
@@ -101,13 +109,15 @@ const MessageList = ({
     setPrevHeight(chatRef.current?.scrollHeight || 0);
     setMessages((prev) => [...prev, ...data.messages]);
     if (messages.length <= 20) {
-      bottomRef.current?.scrollIntoView({behavior: "instant", block: "end"})
+      bottomRef.current?.scrollIntoView({ behavior: "instant", block: "end" });
     }
     setCursor(data.nextCursor);
-    console.log(data.messages);
-    console.log(data.nextCursor);
     setHasMore(data.nextCursor !== undefined);
     setLoading(false);
+
+    if (data.messages.length > 0) {
+      latestMessageIdRef.current = data.messages[0].id;
+    }
   };
 
   useEffect(() => {
@@ -118,6 +128,26 @@ const MessageList = ({
       setPrevHeight(0);
     }
   }, [messages, prevHeight]);
+
+  const poll = async () => {
+    const latestId = latestMessageIdRef.current as any;
+    if (!latestId) return;
+    const newMessages = await fetch(
+      "/api/channel/" + channelId + "/message/" + latestId.toString(),
+      {
+        method: "GET",
+      }
+    );
+    if (!newMessages.ok) return;
+    const data = await newMessages.json();
+    if (data.messages.length === 0) return;
+    setMessages((prevMessages) => [data.messages, ...prevMessages]);
+    latestMessageIdRef.current = data.messages[0].id;
+  };
+  useEffect(() => {
+    const intervalId = setInterval(poll, 3000);
+    return () => clearInterval(intervalId);
+  }, []);
 
   useChatScroll({
     chatRef,
