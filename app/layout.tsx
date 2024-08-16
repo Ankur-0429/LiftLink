@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || ""),
   title: "LyftLink",
   description: "Your Commute, Simplified: Find and Share Rides Instantly",
 };

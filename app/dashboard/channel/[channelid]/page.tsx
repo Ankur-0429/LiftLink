@@ -30,6 +30,9 @@ export async function generateMetadata({
     return {
       title: `Join ${data && data.owner.name}'s Carpool`,
       description: data && data.description,
+      alternates: {
+        canonical: `/dashboard/channel/${id}`
+      }
     };
   } catch (error) {
     console.error("An error occurred while fetching the channel data:", error);
