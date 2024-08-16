@@ -1,11 +1,7 @@
-import ProfileRequestList from "./requestList";
+import ProfileRequest from "./profileRequest";
 
-const ProfileRequest = () => {
-  return (
-    <div className="max-w-screen-lg mx-auto border-l-[1px] border-r-[1px]">
-        <ProfileRequestList />
-    </div>
-  );
+const Page = () => {
+  return <ProfileRequest />;
 };
 
-export default ProfileRequest;
+export default Page;

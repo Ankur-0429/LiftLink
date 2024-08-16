@@ -27,9 +27,9 @@ export async function generateMetadata(
       },
     });
     const previousImages = (await parent).openGraph?.images || [];
-
+    
     return {
-      title: "Join " + (data && data.owner.name) || "" + "'s Carpool",
+      title: `Join ${data && data.owner.name}'s Carpool`,
       description: data && data.description,
       openGraph: {
         images: [...previousImages],
