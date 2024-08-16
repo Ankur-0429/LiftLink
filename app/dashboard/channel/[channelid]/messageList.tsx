@@ -119,10 +119,13 @@ const MessageList = ({
     setHasMore(data.nextCursor !== undefined);
     setLoading(false);
 
+  };
+
+  useEffect(() => {
     if (messages.length > 0) {
       latestMessageIdRef.current = messages[0].id;
     }
-  };
+  }, [messages])
 
   useEffect(() => {
     if (prevHeight > 0 && chatRef.current) {
@@ -153,7 +156,7 @@ const MessageList = ({
       latestMessageIdRef.current = data.messages[0].id;
     };
     const startPolling = () => {
-      timerIdRef.current = setInterval(poll, 3000);
+      timerIdRef.current = setInterval(poll, 10000);
     };
     const stopPolling = () => {
       clearInterval(timerIdRef.current || undefined);

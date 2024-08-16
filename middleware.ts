@@ -1,17 +1,20 @@
 import authConfig from "./auth.config";
 import NextAuth from "next-auth";
 import { apiAuthPrefix, authRoutes, DEFAULT_LOGIN_REDIRECT, DEFAULT_LOGOUT_REDIRECT, publicRoutes } from "./routes";
+import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 export default auth((req) => {
-    const {nextUrl, method} = req;
+    const {nextUrl, method, headers} = req;
     const isLoggedIn = !!req.auth;
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
     const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
-    if (method === 'HEAD') {
-        return;
+    const isCrawler = headers.get("user-agent")?.toLowerCase().includes("bot");
+
+    if (method === 'HEAD' || isCrawler) {
+        return NextResponse.next();
     }
 
     if (isApiAuthRoute) {
