@@ -27,7 +27,7 @@ interface findChannelOutput {
     image: string;
   };
   participants: number;
-  user_requests?: {
+  requests?: {
     userId: string;
     requestId: number;
   }[];
@@ -45,7 +45,8 @@ interface findChannelOutput {
  * @param offset the starting index to query by. Used for pagination
  * @param fromLocation filters by location user wants to carpool from
  * @param toLocation filters by location user wants to go to
- * @param timeOfDay filters by date. Defaults to all channels after current date. Use ISOstring 
+ * @param timeOfDay filters by date. Defaults to all channels after current date. Use ISOstring
+ * @param channelId id of the channel. Will just return array with one element because id is unique 
  * @returns 
  */
 export async function findChannel(
@@ -61,7 +62,47 @@ export async function findChannel(
     longitude: number;
   },
   timeOfDay?: string,
+  id?: number
 ) {
+  if (id) {
+    const data = await db.channel.findUnique({
+      where: {
+        id: id
+      },
+      select: {
+        id: true,
+        description: true,
+        womenOnly: true,
+        participants: true,
+        createdAt: true,
+        owner: {
+          select: {
+            id: true,
+            image: true,
+            name: true,
+          }
+        },
+        members: {
+          select: {
+            id: true,
+            image: true,
+            name: true,
+          }
+        },
+        requests: {
+          where: {
+            userId: currentUserId
+          },
+          select: {
+            userId: true,
+            id: true,
+          }
+        },
+      }
+    });
+    return [data];
+  }
+  
   function getNextDay(date: string) {
     const nextDay = new Date(date);
     nextDay.setDate(nextDay.getDate() + 1);
@@ -73,7 +114,7 @@ export async function findChannel(
     SELECT c.id, c.description, c."womenOnly", c."participants", c."createdAt",
       array_agg(DISTINCT jsonb_build_object('name', m.name, 'image', m.image, 'id', m.id)) AS members,
       jsonb_build_object('name', o.name, 'image', o.image, 'id', o.id) AS owner,
-      array_agg(DISTINCT jsonb_build_object('requestId', r.id, 'userId', r."userId")) FILTER (WHERE r."userId" = $1) AS user_requests
+      array_agg(DISTINCT jsonb_build_object('requestId', r.id, 'userId', r."userId")) FILTER (WHERE r."userId" = $1) AS requests
     FROM "Channel" c
     LEFT JOIN "Request" r ON r."channelId" = c.id
     LEFT JOIN LATERAL (

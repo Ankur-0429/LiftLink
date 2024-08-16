@@ -60,6 +60,7 @@ export async function GET(request: NextRequest) {
   const toLatitude = searchParams.get("toLatitude");
   const fromLongitude = searchParams.get("fromLongitude");
   const toLongitude = searchParams.get("toLongitude");
+  const id = searchParams.get("channelId");
 
   let fromLocation = undefined;
   if (fromLatitude && fromLongitude) {
@@ -78,24 +79,37 @@ export async function GET(request: NextRequest) {
   const currentUserId = session?.user?.id || "0";
 
   try {
-    const data = await findChannel(currentUserId, isWomenOnly, offset, fromLocation, toLocation, departure || undefined)
+    const data = await findChannel(currentUserId, isWomenOnly, offset, fromLocation, toLocation, departure || undefined, parseInt(id || "") || undefined)
+    if (!data) {
+      return NextResponse.json({ channels: [] }, { status: 200 }); 
+    }
     const channelDto: ChannelInterface[] = data.map((e) => {
-      const isMember = e.members && e.members.some((member) => member.id === session?.user?.id);
+      const isMember = e?.members && e.members.some((member) => member.id === session?.user?.id);
 
       let requestStatus: "IDLE" | "PENDING" | "MEMBER" = "IDLE";
 
       if (isMember) {
         requestStatus = "MEMBER";
-      }   else if (e.user_requests && e.user_requests.length > 0) {
+      }   else if (e?.requests && e?.requests.length > 0) {
         requestStatus = "PENDING";
       }
       return {
-        description: e.description,
-        id: e.id,
-        createdAt: e.createdAt,
-        limit: e.participants,
-        members: e.members || [],
-        owner: e.owner,
+        description: e?.description || "",
+        id: e?.id || 0,
+        createdAt: e?.createdAt || new Date(),
+        limit: e?.participants || 0,
+        members: e?.members?.map((e) => {
+          return {
+            name: e.name || undefined,
+            id: e.id || "",
+            image: e.image || undefined
+          }
+        }) || [],
+        owner: {
+          name: e?.owner.name || undefined,
+          id: e?.owner.id || "",
+          image: e?.owner.image || undefined
+        },
         requestStatus,
       }
     })

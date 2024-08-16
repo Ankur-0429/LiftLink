@@ -133,25 +133,25 @@ const MessageList = ({
     }
   }, [messages, prevHeight]);
 
-  const poll = async () => {
-    const latestId = latestMessageIdRef.current as any;
-    if (latestId === null) return;
-    const newMessages = await fetch(
-      "/api/channel/" + channelId + "/message/" + latestId.toString(),
-      {
-        method: "GET",
-      }
-    );
-    if (!newMessages.ok) {
-      setIsPollingEnabled(false);
-      return;
-    };
-    const data = await newMessages.json();
-    if (data.messages.length === 0) return;
-    setMessages((prevMessages) => [...data.messages, ...prevMessages]);
-    latestMessageIdRef.current = data.messages[0].id;
-  };
   useEffect(() => {
+    const poll = async () => {
+      const latestId = latestMessageIdRef.current as any;
+      if (latestId === null) return;
+      const newMessages = await fetch(
+        "/api/channel/" + channelId + "/message/" + latestId.toString(),
+        {
+          method: "GET",
+        }
+      );
+      if (!newMessages.ok) {
+        setIsPollingEnabled(false);
+        return;
+      }
+      const data = await newMessages.json();
+      if (data.messages.length === 0) return;
+      setMessages((prevMessages) => [...data.messages, ...prevMessages]);
+      latestMessageIdRef.current = data.messages[0].id;
+    };
     const startPolling = () => {
       timerIdRef.current = setInterval(poll, 3000);
     };
@@ -168,7 +168,7 @@ const MessageList = ({
     return () => {
       stopPolling();
     };
-  }, [isPageVisible, isPollingEnabled]);
+  }, [isPageVisible, isPollingEnabled, channelId, setMessages]);
 
   useChatScroll({
     chatRef,

@@ -5,7 +5,11 @@ export function usePageVisibility() {
 
   useEffect(() => {
     const handleVisibilityChange = () => {
-      setIsPageVisible(!document.hidden);
+      if (document && document.hidden) {
+        setIsPageVisible(!document.hidden);
+      } else {
+        setIsPageVisible(true);
+      }
     };
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
