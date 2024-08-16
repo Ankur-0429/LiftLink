@@ -33,6 +33,8 @@ const Message = ({ message }: { message: MessageInterface }) => {
   const session = useSession();
   const router = useRouter();
   console.log(message);
+  console.log("-------")
+  console.log(session.data)
   const isUser = session.data?.user?.id === message.user.id;
   return (
     <div
