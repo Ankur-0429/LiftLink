@@ -131,7 +131,8 @@ const MessageList = ({
 
   const poll = async () => {
     const latestId = latestMessageIdRef.current as any;
-    if (!latestId) return;
+    console.log("latestid: " + latestId)
+    if (latestId === null) return;
     const newMessages = await fetch(
       "/api/channel/" + channelId + "/message/" + latestId.toString(),
       {
@@ -142,6 +143,7 @@ const MessageList = ({
     const data = await newMessages.json();
     if (data.messages.length === 0) return;
     setMessages((prevMessages) => [data.messages, ...prevMessages]);
+    console.log("new data: ", data.messages);
     latestMessageIdRef.current = data.messages[0].id;
   };
   useEffect(() => {
