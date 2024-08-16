@@ -17,6 +17,7 @@ import {
   useState,
 } from "react";
 import { useChatScroll } from "./useChatScroll";
+import { usePageVisibility } from "./usePageVisibility";
 
 export interface MessageInterface {
   content: string;
@@ -86,6 +87,9 @@ const MessageList = ({
   const chatRef = useRef<ElementRef<"div">>(null);
   const bottomRef = useRef<ElementRef<"div">>(null);
   const latestMessageIdRef = useRef<null | number>(null);
+  const timerIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isPageVisible = usePageVisibility();
+  const [isPollingEnabled, setIsPollingEnabled] = useState(true);
 
   const fetchMessages = async () => {
     setLoading(true);
@@ -115,8 +119,8 @@ const MessageList = ({
     setHasMore(data.nextCursor !== undefined);
     setLoading(false);
 
-    if (data.messages.length > 0) {
-      latestMessageIdRef.current = data.messages[0].id;
+    if (messages.length > 0) {
+      latestMessageIdRef.current = messages[0].id;
     }
   };
 
@@ -138,16 +142,33 @@ const MessageList = ({
         method: "GET",
       }
     );
-    if (!newMessages.ok) return;
+    if (!newMessages.ok) {
+      setIsPollingEnabled(false);
+      return;
+    };
     const data = await newMessages.json();
     if (data.messages.length === 0) return;
     setMessages((prevMessages) => [...data.messages, ...prevMessages]);
     latestMessageIdRef.current = data.messages[0].id;
   };
   useEffect(() => {
-    const intervalId = setInterval(poll, 3000);
-    return () => clearInterval(intervalId);
-  }, []);
+    const startPolling = () => {
+      timerIdRef.current = setInterval(poll, 3000);
+    };
+    const stopPolling = () => {
+      clearInterval(timerIdRef.current || undefined);
+    };
+
+    if (isPageVisible && isPollingEnabled) {
+      startPolling();
+    } else {
+      stopPolling();
+    }
+
+    return () => {
+      stopPolling();
+    };
+  }, [isPageVisible, isPollingEnabled]);
 
   useChatScroll({
     chatRef,
