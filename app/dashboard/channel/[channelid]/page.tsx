@@ -1,14 +1,5 @@
 "use client";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import InfiniteScroll from "@/components/ui/infinite-scroll";
-import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import { ACCOUNT_ROUTE } from "@/routes";
-import { Loader2, Send } from "lucide-react";
-import moment from "moment";
-import { useSession } from "next-auth/react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import ChatInput from "./chatInput";
 import MessageList, { MessageInterface } from "./messageList";
