@@ -1,10 +1,7 @@
 import MessageChannel from "./MessageChannel";
-import { Inter } from "next/font/google";
 import type { Metadata } from "next";
 import db from "@/lib/db";
 import "@/app/globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 type Props = {
   params: { channelid: string };
