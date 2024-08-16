@@ -24,7 +24,7 @@ export interface ChannelInterface {
   limit: number;
   createdAt: Date;
   description: string;
-  requestStatus: "PENDING" | "IDLE" | "MEMBER";
+  requestStatus: "PENDING" | "IDLE" | "MEMBER" | "EXPIRED" | "FULL";
 }
 
 const Channel = ({
@@ -118,6 +118,11 @@ const Channel = ({
               Requested
             </Button>
           )}
+          {status === "EXPIRED" && (
+            <Button variant="secondary" className="w-32 cursor-default">
+              EXPIRED
+            </Button>
+          )}
           {status === "IDLE" && (
             <Button onClick={() => {
               const makeRequest = async() => {
@@ -132,7 +137,7 @@ const Channel = ({
             </Button>
           )}
           {status === "MEMBER" && (
-            <Button onClick={() => {
+            <Button variant="outline" onClick={() => {
               router.push(CHANNEL_ROUTE(id.toString()))
             }} className="w-32">
               Message Group

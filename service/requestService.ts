@@ -25,6 +25,10 @@ export const requestChannel = async (channelid: number, userid: string) => {
     if (memberCount > channel.members.length)
       throw new Error("max member limit reached");
 
+    if (channel.departure < new Date()) {
+      throw new Error("channel expired");
+    }
+
     const existingRequest = await db.request.findUnique({
       where: {
         userId_channelId: {

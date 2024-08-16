@@ -33,6 +33,7 @@ interface findChannelOutput {
   }[];
   womenOnly: boolean;
   createdAt: Date;
+  departure: Date;
 }
 
 /**
@@ -98,6 +99,7 @@ export async function findChannel(
             id: true,
           }
         },
+        departure: true,
       }
     });
     return [data];
@@ -111,7 +113,7 @@ export async function findChannel(
   const bindings: any[] = [currentUserId, womenOnly, offset];
 
   let query = `
-    SELECT c.id, c.description, c."womenOnly", c."participants", c."createdAt",
+    SELECT c.id, c.description, c."womenOnly", c."participants", c."createdAt", c."departure",
       array_agg(DISTINCT jsonb_build_object('name', m.name, 'image', m.image, 'id', m.id)) AS members,
       jsonb_build_object('name', o.name, 'image', o.image, 'id', o.id) AS owner,
       array_agg(DISTINCT jsonb_build_object('requestId', r.id, 'userId', r."userId")) FILTER (WHERE r."userId" = $1) AS requests
@@ -167,7 +169,7 @@ export async function findChannel(
 
   query += `
     AND c."womenOnly" = $2
-    GROUP BY c.id, c.description, c."womenOnly", c."participants", c."ownerId", c."createdAt", o.name, o.image, o.id
+    GROUP BY c.id, c.description, c."womenOnly", c."participants", c."ownerId", c."createdAt", c."departure", o.name, o.image, o.id
     ORDER BY c.departure ASC
     LIMIT 10
     OFFSET $3;

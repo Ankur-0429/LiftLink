@@ -86,11 +86,15 @@ export async function GET(request: NextRequest) {
     const channelDto: ChannelInterface[] = data.map((e) => {
       const isMember = e?.members && e.members.some((member) => member.id === session?.user?.id);
 
-      let requestStatus: "IDLE" | "PENDING" | "MEMBER" = "IDLE";
+      let requestStatus: "IDLE" | "PENDING" | "MEMBER" | "EXPIRED" | "FULL" = "IDLE";
 
       if (isMember) {
         requestStatus = "MEMBER";
-      }   else if (e?.requests && e?.requests.length > 0) {
+      } else if (e?.departure && e.departure < new Date()) {
+        requestStatus = "EXPIRED";
+      } else if (e && e.members && e?.participants && e.members.length === e.participants) {
+        requestStatus = "FULL"
+      } else if (e?.requests && e?.requests.length > 0) {
         requestStatus = "PENDING";
       }
       return {
