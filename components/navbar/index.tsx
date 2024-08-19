@@ -24,7 +24,7 @@ export default function Navbar() {
     <nav className="bg-white shadow-sm dark:bg-gray-950/90">
       <div className="w-full max-w-screen-lg mx-auto px-4">
         <div className="flex justify-between h-14 items-center">
-          <Link href="#" className="flex items-center" prefetch={false}>
+          <Link href="/" className="flex items-center" prefetch={false}>
             <MountainIcon className="h-6 w-6" />
             <span className="sr-only">Acme Inc</span>
           </Link>

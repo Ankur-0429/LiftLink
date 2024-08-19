@@ -5,8 +5,7 @@ import MessageList, { MessageInterface } from "./messageList";
 import Channel, { ChannelInterface } from "@/components/channel";
 import { Loader2 } from "lucide-react";
 
-
-const MessageChannel = ({channelid}: {channelid: string}) => {
+const MessageChannel = ({ channelid }: { channelid: string }) => {
   const [messages, setMessages] = useState([] as MessageInterface[]);
   const [channel, setChannel] = useState(
     undefined as undefined | ChannelInterface
@@ -40,10 +39,14 @@ const MessageChannel = ({channelid}: {channelid: string}) => {
       </div>
     );
 
+
   if (channel && channel?.requestStatus !== "MEMBER") {
     return (
       <div className="max-w-screen-lg mx-auto border-[1px] flex flex-col mt-32">
-        <Channel {...channel} />
+        <Channel
+          {...channel}
+          onDelete={() => {}}
+        />
       </div>
     );
   } else {
@@ -55,6 +58,7 @@ const MessageChannel = ({channelid}: {channelid: string}) => {
           messages={messages}
           setMessages={setMessages}
           channelId={channelid}
+          channel={channel}
         />
         <div className="my-3">
           <ChatInput

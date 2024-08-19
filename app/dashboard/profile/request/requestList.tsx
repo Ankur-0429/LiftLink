@@ -34,10 +34,7 @@ const ProfileRequest = (
       requestId: number,
       userId: string
     ) => {};
-    rejectRequests: (
-      channelId: number,
-      requestId: number,
-    ) => {};
+    rejectRequests: (channelId: number, requestId: number) => {};
   }
 ) => {
   const router = useRouter();
@@ -113,12 +110,12 @@ const ProfileRequest = (
         </div>
       </div>
       <div className="flex items-center gap-x-3 ml-auto justify-end">
-        <Button onClick={() => {
-          request.rejectRequests(
-            request.channelId,
-            request.id
-          );
-        }} className="w-32" variant="destructive">
+        <Button
+          onClick={() => {
+            request.rejectRequests(request.channelId, request.id);
+          }}
+          className="w-32"
+          variant="destructive">
           Reject
         </Button>
         <Button
@@ -185,10 +182,7 @@ const ProfileRequestList = () => {
     }
   };
 
-  const rejectRequests = async (
-    channelId: number,
-    requestId: number,
-  ) => {
+  const rejectRequests = async (channelId: number, requestId: number) => {
     const params = {
       channelId: channelId.toString(),
       requestId: requestId.toString(),
@@ -222,6 +216,14 @@ const ProfileRequestList = () => {
 
   return (
     <div>
+      {requests.length === 0 && !loading && (
+        <div className="mt-6 flex flex-col items-center">
+          <h1 className="font-semibold">No requests found</h1>
+          <p className="text-muted-foreground">
+            We will notify you if other users request to join your carpool
+          </p>
+        </div>
+      )}
       {requests.map((e) => {
         return (
           <>

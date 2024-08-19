@@ -18,6 +18,7 @@ import {
 } from "react";
 import { useChatScroll } from "./useChatScroll";
 import { usePageVisibility } from "./usePageVisibility";
+import { ChannelInterface } from "@/components/channel";
 
 export interface MessageInterface {
   content: string;
@@ -72,12 +73,14 @@ interface MessageListProps {
   channelId: string;
   messages: MessageInterface[];
   setMessages: Dispatch<SetStateAction<MessageInterface[]>>;
+  channel: undefined | ChannelInterface;
 }
 
 const MessageList = ({
   channelId,
   messages,
   setMessages,
+  channel,
 }: MessageListProps) => {
   const [cursor, setCursor] = useState(undefined as number | undefined);
   const [hasMore, setHasMore] = useState(true);
@@ -118,14 +121,13 @@ const MessageList = ({
     setCursor(data.nextCursor);
     setHasMore(data.nextCursor !== undefined);
     setLoading(false);
-
   };
 
   useEffect(() => {
     if (messages.length > 0) {
       latestMessageIdRef.current = messages[0].id;
     }
-  }, [messages])
+  }, [messages]);
 
   useEffect(() => {
     if (prevHeight > 0 && chatRef.current) {
@@ -179,8 +181,38 @@ const MessageList = ({
     count: messages.length,
   });
 
+  const router = useRouter();
+
   return (
     <div ref={chatRef} className="flex-1 flex flex-col overflow-y-auto">
+      {!hasMore && !loading && (
+        <div className="border-border border-2 rounded-xl p-3 mt-6">
+          <div className="my-3 flex items-center gap-2">
+            <div className="flex -space-x-3 *:ring *:ring-background">
+              {channel?.members.map((e) => {
+                return (
+                  <Avatar
+                    key={e.image}
+                    className="cursor-pointer hover:border-2 border-foreground transition"
+                    onClick={() => {
+                      router.push(ACCOUNT_ROUTE(e.id));
+                    }}>
+                    <AvatarImage src={e.image} alt={e.name} />
+                    <AvatarFallback>
+                      {e.name?.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                );
+              })}
+            </div>
+            <p className="text-muted-foreground">
+              {channel && channel.limit - channel.members.length}{" "}
+              {channel && channel.limit - channel.members.length === 1 ? "person" : "people"} left
+            </p>
+          </div>
+          <p className="mb-3">{channel?.description}</p>
+        </div>
+      )}
       {!hasMore && <div className="flex-1" />}
       <InfiniteScroll
         next={fetchMessages}

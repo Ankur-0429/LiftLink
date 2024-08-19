@@ -65,7 +65,7 @@ const ChatInput = ({ channelId, messages, setMessages }: ChatInputProps) => {
 
   useEffect(() => {
     form.setFocus("content")
-  }, [form.setFocus])
+  }, [form.setFocus, form])
 
   return (
     <Form {...form}>
