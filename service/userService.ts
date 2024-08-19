@@ -69,3 +69,22 @@ export const findChannelsByOwner = async (
     nextCursor,
   };
 };
+
+export async function findUserById(userId: string) {
+  return await db.user.findUnique({
+    where: {
+      id: userId
+    },
+    select: {
+      name: true,
+      createdAt: true,
+      image: true,
+      _count: {
+        select: {
+          ownedChannels: true,
+          memberChannels: true
+        }
+      }
+    }
+  })
+}

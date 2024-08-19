@@ -69,10 +69,6 @@ export default function Navbar() {
                   <Mail className="mr-2 h-4 w-4" />
                   <span>Requests</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={()=>signOut()}>
