@@ -3,7 +3,7 @@
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import moment from "moment";
-import { EllipsisVertical, Share2 } from "lucide-react";
+import { Delete, EllipsisVertical, Share2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
 import { useParams, useRouter } from "next/navigation";
@@ -11,6 +11,15 @@ import { ACCOUNT_ROUTE, CHANNEL_ROUTE } from "@/routes";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { RWebShare } from "react-web-share";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 type UserType = {
   name?: string;
@@ -36,9 +45,13 @@ const Channel = ({
   description,
   requestStatus,
   id,
-}: ChannelInterface) => {
+  onDelete,
+}: ChannelInterface & {
+  onDelete: (channelId:number) => void;
+}) => {
   const params = useParams<{ profileid: string }>();
   const router = useRouter();
+  const session = useSession();
 
   const [status, setStatus] = useState(requestStatus);
 
@@ -89,9 +102,23 @@ const Channel = ({
               </span>
             </div>
           </div>
-          <div className="text-muted-foreground">
-            <EllipsisVertical size={20} />
-          </div>
+          {session.data?.user?.id === owner.id && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="text-muted-foreground hover:bg-gray-300 transition p-2 rounded-full cursor-pointer">
+                  <EllipsisVertical size={20} />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={() => {onDelete(id)}}>
+                    <Delete className="mr-2 h-4 w-4" />
+                    <span>Delete Post</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
         <div className="ml-12">
           <div className="my-3 flex items-center gap-2">

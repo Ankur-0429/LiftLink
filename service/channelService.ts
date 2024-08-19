@@ -177,3 +177,27 @@ export async function findChannel(
 
   return await db.$queryRawUnsafe<findChannelOutput[]>(query, ...bindings);
 }
+
+export async function DeleteChannelById(channelId:number, currentUserId:string) {
+  try {
+    const channel = await db.channel.findUnique({
+      where: {id: channelId},
+      include: {owner: true}
+    });
+
+    if (!channel) {
+      throw new Error("Channel not found");
+    }
+
+    if (channel.owner.id !== currentUserId) {
+      throw new Error("Unathorized");
+    }
+
+    await db.channel.delete({
+      where: {id: channelId}
+    })
+  } catch(e) {
+    console.error(e);
+    throw new Error("Unable to delete channel");
+  }
+}

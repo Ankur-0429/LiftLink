@@ -78,8 +78,10 @@ const DashboardChannelsList = ({ filterData }: DashboardChannelsListProps) => {
     <div>
       {channels.length === 0 && !loading && (
         <div className="mt-6 flex flex-col items-center">
-            <h1 className="font-semibold">No posts found</h1>
-            <p className="text-muted-foreground">Make changes to your filters or create a post</p>
+          <h1 className="font-semibold">No posts found</h1>
+          <p className="text-muted-foreground">
+            Make changes to your filters or create a post
+          </p>
         </div>
       )}
       {channels.map((e) => (
@@ -92,6 +94,16 @@ const DashboardChannelsList = ({ filterData }: DashboardChannelsListProps) => {
           requestStatus={e.requestStatus}
           limit={e.limit}
           members={e.members}
+          onDelete={async (channelid) => {
+            const response = await fetch("/api/channel/" + channelid, {
+              method: "DELETE",
+            });
+            if (response.ok) {
+              setChannels((prevChannels) =>
+                prevChannels.filter((channel) => channel.id !== channelid)
+              );
+            }
+          }}
         />
       ))}
       <InfiniteScroll

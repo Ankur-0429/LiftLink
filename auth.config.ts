@@ -7,12 +7,12 @@ export default {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       authorization: {
-        params: {
-          promt: "consent",
-          access_type: "offline",
-          response_type: "code",
-          hd: "ucsc.edu"
-        }
+        // params: {
+        //   promt: "consent",
+        //   access_type: "offline",
+        //   response_type: "code",
+        //   hd: "ucsc.edu"
+        // }
       }
     }),
   ],

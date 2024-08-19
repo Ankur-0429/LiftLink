@@ -49,6 +49,16 @@ const UserChannelsList = ({ userId }: { userId: string }) => {
             limit={e.limit}
             members={e.members}
             key={e.id}
+            onDelete={async (channelid) => {
+              const response = await fetch("/api/channel/" + channelid, {
+                method: "DELETE",
+              });
+              if (response.ok) {
+                setChannels((prevChannels) =>
+                  prevChannels.filter((channel) => channel.id !== channelid)
+                );
+              }
+            }}
           />
         );
       })}
