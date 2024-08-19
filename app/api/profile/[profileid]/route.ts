@@ -1,8 +1,21 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { findChannelsByOwner, findUserById } from "@/service/userService";
+import { deleteUserById, findChannelsByOwner, findUserById } from "@/service/userService";
 import { UserInterface } from "@/app/dashboard/profile/[profileid]/User";
+
+export async function DELETE(
+  request: NextRequest,
+  params: { params: { profileid: string } }
+) {
+  const {profileid} = params.params;
+  const session = await auth();
+  if (session?.user?.id !== profileid) {
+    return NextResponse.json({}, {status: 400})
+  }
+  await deleteUserById(profileid)
+  return NextResponse.json({}, {status: 200});
+}
 
 export async function GET(
   request: NextRequest,

@@ -25,7 +25,7 @@ export default function Profile() {
 
   return (
     <div className="max-w-screen-lg mx-auto border-l-[1px] border-r-[1px]">
-      {user && <User {...user} />}
+      {user && <User {...user} id={profileid} />}
       <Separator />
       <UserChannelsList userId={profileid} />
     </div>

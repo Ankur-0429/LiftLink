@@ -88,3 +88,9 @@ export async function findUserById(userId: string) {
     }
   })
 }
+
+export async function deleteUserById(currentUserId: string) {
+  await db.user.delete({
+    where: {id: currentUserId}
+  })
+}

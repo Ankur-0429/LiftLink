@@ -1,9 +1,11 @@
 "use client";
 
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import moment from "moment";
+import { signOut, useSession } from "next-auth/react";
 
 export interface UserInterface {
   name: string;
@@ -19,7 +21,11 @@ const User = ({
   numJoinedChannels,
   numOwnedChannels,
   createdAt,
-}: UserInterface) => {
+  id,
+}: UserInterface & {
+  id: string;
+}) => {
+  const session = useSession();
   return (
     <div className="p-3 px-6">
       <div className="flex gap-x-2 items-center mt-6">
@@ -34,7 +40,7 @@ const User = ({
           </span>
         </div>
       </div>
-      <div className="mt-6">
+      <div className="mt-6 ml-24">
         <div className="flex items-start gap-x-6">
           <div className="flex flex-col items-center">
             <span className="text-xl font-semibold">{numJoinedChannels}</span>
@@ -46,6 +52,33 @@ const User = ({
           </div>
         </div>
       </div>
+      {session.data?.user?.id === id && (
+        <div className="ml-24 mt-6">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+
+          <Button variant="destructive">Delete your account</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure you want to delete your account?</AlertDialogTitle>
+                <AlertDialogDescription>This action cannot be undone. This will permanently delete your account, channels, and messages</AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={async () => {
+                  const res = await fetch("/api/profile/" + id, {
+                    method: "DELETE"
+                  });
+                  if (res.ok) {
+                    signOut();
+                  }
+                }}>Delete</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      )}
     </div>
   );
 };
