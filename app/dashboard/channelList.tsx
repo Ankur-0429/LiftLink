@@ -76,6 +76,12 @@ const DashboardChannelsList = ({ filterData }: DashboardChannelsListProps) => {
 
   return (
     <div>
+      {channels.length === 0 && !loading && (
+        <div className="mt-6 flex flex-col items-center">
+            <h1 className="font-semibold">No posts found</h1>
+            <p className="text-muted-foreground">Make changes to your filters or create a post</p>
+        </div>
+      )}
       {channels.map((e) => (
         <Channel
           key={e.id}

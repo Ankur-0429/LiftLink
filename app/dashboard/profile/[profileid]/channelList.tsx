@@ -4,9 +4,7 @@ import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
 
 const UserChannelsList = ({ userId }: { userId: string }) => {
-  const [channels, setChannels] = useState(
-    [] as ChannelInterface[]
-  );
+  const [channels, setChannels] = useState([] as ChannelInterface[]);
   const [cursor, setCursor] = useState(undefined as number | undefined);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = React.useState(false);
@@ -32,6 +30,14 @@ const UserChannelsList = ({ userId }: { userId: string }) => {
 
   return (
     <div>
+      {channels.length === 0 && !loading && (
+        <div className="mt-6 flex flex-col items-center">
+          <h1 className="font-semibold">No posts found</h1>
+          <p className="text-muted-foreground">
+            This user hasn&apos;t made any posts yet
+          </p>
+        </div>
+      )}
       {channels.map((e) => {
         return (
           <Channel
@@ -51,7 +57,9 @@ const UserChannelsList = ({ userId }: { userId: string }) => {
         next={handleLoadMore}
         isLoading={loading}
         threshold={1}>
-        {hasMore && <Loader2 className="my-4 h-8 w-8 animate-spin bg-transparent mx-auto" />}
+        {hasMore && (
+          <Loader2 className="my-4 h-8 w-8 animate-spin bg-transparent mx-auto" />
+        )}
       </InfiniteScroll>
     </div>
   );

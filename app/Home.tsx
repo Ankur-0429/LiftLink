@@ -63,7 +63,7 @@ export default function Home() {
         <div className="container mx-auto px-4 flex flex-wrap justify-between items-center text-gray-600">
           <div className="flex flex-wrap space-x-4 mb-2 md:mb-0">
             <a
-              href="https://portfolio-ankur-0429.vercel.app/"
+              href="https://ankurahir.com"
               className="hover:underline">
               ©2024 Ahir
             </a>
