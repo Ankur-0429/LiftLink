@@ -102,6 +102,9 @@ export async function GET(request: NextRequest) {
         id: e?.id || 0,
         createdAt: e?.createdAt || new Date(),
         limit: e?.participants || 0,
+        departure: e?.departure || new Date(),
+        from: e?.fromAddress || "",
+        to: e?.toAddress || "",
         members: e?.members?.map((e) => {
           return {
             name: e.name || undefined,

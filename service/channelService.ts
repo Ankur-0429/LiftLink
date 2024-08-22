@@ -16,6 +16,8 @@ export async function createChannel(channel: Channel) {
 interface findChannelOutput {
   description: string;
   id: number;
+  fromAddress: string;
+  toAddress: string;
   members?: {
     id: string;
     name: string;
@@ -76,6 +78,8 @@ export async function findChannel(
         womenOnly: true,
         participants: true,
         createdAt: true,
+        fromAddress: true,
+        toAddress: true,
         owner: {
           select: {
             id: true,
@@ -113,7 +117,7 @@ export async function findChannel(
   const bindings: any[] = [currentUserId, womenOnly, offset];
 
   let query = `
-    SELECT c.id, c.description, c."womenOnly", c."participants", c."createdAt", c."departure",
+      SELECT c.id, c.description, c."womenOnly", c."participants", c."createdAt", c."departure", c."fromAddress", c."toAddress",
       array_agg(DISTINCT jsonb_build_object('name', m.name, 'image', m.image, 'id', m.id)) AS members,
       jsonb_build_object('name', o.name, 'image', o.image, 'id', o.id) AS owner,
       array_agg(DISTINCT jsonb_build_object('requestId', r.id, 'userId', r."userId")) FILTER (WHERE r."userId" = $1) AS requests
@@ -169,7 +173,7 @@ export async function findChannel(
 
   query += `
     AND c."womenOnly" = $2
-    GROUP BY c.id, c.description, c."womenOnly", c."participants", c."ownerId", c."createdAt", c."departure", o.name, o.image, o.id
+    GROUP BY c.id, c.description, c."womenOnly", c."participants", c."ownerId", c."createdAt", c."departure", c."fromAddress", "toAddress", o.name, o.image, o.id
     ORDER BY c.departure ASC
     LIMIT 10
     OFFSET $3;

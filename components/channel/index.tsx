@@ -31,6 +31,9 @@ export interface ChannelInterface {
   owner: UserType;
   id: number;
   members: UserType[];
+  from: string;
+  to: string;
+  departure: Date;
   limit: number;
   createdAt: Date;
   description: string;
