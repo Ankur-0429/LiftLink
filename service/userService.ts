@@ -32,7 +32,10 @@ export const findChannelsByOwner = async (
       description: true,
       participants: true,
       createdAt: true,
+      fromAddress: true,
+      toAddress: true,
       id: true,
+      departure: true,
       members: {
         select: {
           name: true,

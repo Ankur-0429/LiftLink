@@ -31,6 +31,9 @@ export async function GET(request: NextRequest, params: {params: {profileid: str
         id: e.id,
         description: e.description,
         createdAt: e.createdAt,
+        departure: e.departure,
+        fromAddress: e.fromAddress,
+        toAddress: e.toAddress,
         requestStatus,
         limit: e.participants,
         owner: {

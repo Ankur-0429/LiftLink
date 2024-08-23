@@ -94,6 +94,9 @@ const DashboardChannelsList = ({ filterData }: DashboardChannelsListProps) => {
           requestStatus={e.requestStatus}
           limit={e.limit}
           members={e.members}
+          fromAddress={e.fromAddress}
+          toAddress={e.toAddress}
+          departure={e.departure}
           onDelete={async (channelid) => {
             const response = await fetch("/api/channel/" + channelid, {
               method: "DELETE",
