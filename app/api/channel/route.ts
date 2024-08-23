@@ -103,8 +103,8 @@ export async function GET(request: NextRequest) {
         createdAt: e?.createdAt || new Date(),
         limit: e?.participants || 0,
         departure: e?.departure || new Date(),
-        from: e?.fromAddress || "",
-        to: e?.toAddress || "",
+        fromAddress: e?.fromAddress || "",
+        toAddress: e?.toAddress || "",
         members: e?.members?.map((e) => {
           return {
             name: e.name || undefined,
@@ -119,8 +119,9 @@ export async function GET(request: NextRequest) {
         },
         requestStatus,
       }
+      
     })
-
+    console.log("Channel DTO:", channelDto);
     return NextResponse.json({ channels: channelDto }, { status: 200 });
   } catch (error) {
     console.error(error);

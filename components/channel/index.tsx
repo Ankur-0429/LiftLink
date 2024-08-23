@@ -31,8 +31,8 @@ export interface ChannelInterface {
   owner: UserType;
   id: number;
   members: UserType[];
-  from: string;
-  to: string;
+  fromAddress: string;
+  toAddress: string;
   departure: Date;
   limit: number;
   createdAt: Date;
@@ -44,6 +44,8 @@ const Channel = ({
   owner,
   members,
   limit,
+  fromAddress,
+  toAddress,
   createdAt,
   description,
   requestStatus,
@@ -52,6 +54,7 @@ const Channel = ({
 }: ChannelInterface & {
   onDelete: (channelId:number) => void;
 }) => {
+  console.log("Channel props:", { fromAddress, toAddress, createdAt, description, requestStatus, id, owner, members, limit });
   const params = useParams<{ profileid: string }>();
   const router = useRouter();
   const session = useSession();
@@ -151,6 +154,15 @@ const Channel = ({
               {limit - members.length === 1 ? "person" : "people"} left
             </p>
           </div>
+          <div className="from-to-description">
+            fromAddress: {fromAddress}
+          </div>
+          <div className="from-to-description">
+            toAddress: {toAddress}
+          </div>
+          <p className="date-description">
+            {moment(createdAt).format("MMMM Do YYYY")}
+          </p>
           <p className="mb-3">{description}</p>
           <div className="flex items-center gap-x-3">
             {status === "PENDING" && (
