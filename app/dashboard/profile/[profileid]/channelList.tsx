@@ -48,6 +48,9 @@ const UserChannelsList = ({ userId }: { userId: string }) => {
             requestStatus={e.requestStatus}
             limit={e.limit}
             members={e.members}
+            departure={e.departure}
+            fromAddress={e.fromAddress}
+            toAddress={e.toAddress}
             key={e.id}
             onDelete={async (channelid) => {
               const response = await fetch("/api/channel/" + channelid, {
