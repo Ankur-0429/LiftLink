@@ -20,9 +20,12 @@ import LocationInput from "@/components/locationInput";
 import { Textarea } from "@/components/ui/textarea";
 import { DateTimePicker } from "@/components/ui/datetime-picker";
 import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 const CreatePost = () => {
   const session = useSession();
+  const { toast } = useToast();
+
 
   const [fromLocation, setFromLocation] = useState(
     null as null | { latitude: number; longitude: number; address: string }
@@ -68,11 +71,19 @@ const CreatePost = () => {
         description: data.occasion,
       };
 
+      
       await fetch("/api/channel", {
         method: "POST",
         body: JSON.stringify(channel),
       });
 
+    
+      toast({
+          title: "Post was Created",
+          description: "Refresh the page",
+          duration: 10000,
+        });
+      
       setOpen(false)
     }
   };

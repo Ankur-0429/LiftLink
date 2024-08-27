@@ -67,6 +67,10 @@ export default function Home() {
               className="hover:underline">
               ©2024 Ahir
             </a>
+            <a
+              className="hover:underline">
+              ©2024 Sachin
+            </a>
           </div>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">
@@ -75,7 +79,7 @@ export default function Home() {
               <p className="hidden sm:block">Limited to UCSC students</p>
               <span className="hidden sm:block">•</span>
               <a
-                href="mailto:ankurahir0429@gmail.com"
+                href="mailto:slugssplit@gmail.com"
                 className="text-blue-500 hover:underline">
                 Send Feedback
               </a>
